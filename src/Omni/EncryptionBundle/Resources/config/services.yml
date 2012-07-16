@@ -1,0 +1,12 @@
+services: 
+    omni.encryption.encryption_manager:
+        class: Omni\EncryptionBundle\Manager\EncryptionManager
+        arguments: ["@logger","@doctrine","@service_container"]
+  
+    creditcard.listener:
+        class: Omni\EncryptionBundle\Listener\AesEncryption
+        tags:
+            - { name: doctrine.event_listener, event: preUpdate, method: preUpdate }
+            - { name: doctrine.event_listener, event: prePersist, method: prePersist }
+            - { name: doctrine.event_listener, event: postLoad, method: postLoad }
+        arguments: ["@omni.encryption.encryption_manager"]
