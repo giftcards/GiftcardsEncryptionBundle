@@ -1,6 +1,6 @@
 <?php
 namespace Omni\EncryptionBundle\Doctrine\Type;
-use Omni\EncryptionBundle\Doctrine\Type\BlobType;
+use Doctrine\DBAL\Types\BlobType;
 
 /**
  * Type that aes encrypts and decrypts.
