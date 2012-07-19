@@ -46,8 +46,8 @@ class EncryptionManager {
         }
 		
         
-        $pad_value = 16-(strlen($val) % 16);
-        $val = str_pad($val, (16*(floor(strlen($val) / 16)+1)), chr($pad_value));
+        $pad_value = 16-(strlen($value) % 16);
+        $value = str_pad($value, (16*(floor(strlen($value) / 16)+1)), chr($pad_value));
         return mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $this->mysqlAesKey($this->encryptionString), $value, MCRYPT_MODE_ECB, mcrypt_create_iv( mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_DEV_URANDOM));
     }
 
@@ -56,8 +56,8 @@ class EncryptionManager {
         	return null;
         }
 		
-        $val = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $this->mysqlAesKey($this->encryptionString), $value, MCRYPT_MODE_ECB, mcrypt_create_iv( mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_DEV_URANDOM));
-        return rtrim($val, "\0..\16");
+        $value = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $this->mysqlAesKey($this->encryptionString), $value, MCRYPT_MODE_ECB, mcrypt_create_iv( mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_DEV_URANDOM));
+        return rtrim($value, "\0..\16");
     }
     
     protected function mysqlAesKey($key) {
