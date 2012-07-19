@@ -2,8 +2,9 @@
 	"name": "omni/encryption-bundle",
     "autoload": {
         "psr-0": {
-	    	"Omni\\EncryptionBundle": "src"
+	    	"Omni\\EncryptionBundle": ""
         }
     }
+    "target-dir": "Omni/EncryptionBundle"
     
 }
