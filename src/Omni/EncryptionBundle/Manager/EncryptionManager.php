@@ -44,7 +44,11 @@ class EncryptionManager {
         if ($value === null){
         	return null;
         }
-		return MCRYPT_ENCRYPT( MCRYPT_RIJNDAEL_256, $this->encryptionString, $value, MCRYPT_MODE_ECB, MCRYPT_CREATE_IV( MCRYPT_GET_IV_SIZE( MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB ), MCRYPT_DEV_URANDOM ) );
+		
+        
+        $pad_value = 16-(strlen($value) % 16);
+        $value = str_pad($value, (16*(floor(strlen($value) / 16)+1)), chr($pad_value));
+        return mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $this->mysqlAesKey($this->encryptionString), $value, MCRYPT_MODE_ECB, mcrypt_create_iv( mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_DEV_URANDOM));
     }
 
     public function aesDecrypt($value) {
@@ -52,7 +56,19 @@ class EncryptionManager {
         	return null;
         }
 		
-		return TRIM( MCRYPT_DECRYPT( MCRYPT_RIJNDAEL_256, $this->encryptionString, $value, MCRYPT_MODE_ECB, MCRYPT_CREATE_IV( MCRYPT_GET_IV_SIZE( MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB ), MCRYPT_DEV_URANDOM ) ) );
+        $value = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $this->mysqlAesKey($this->encryptionString), $value, MCRYPT_MODE_ECB, mcrypt_create_iv( mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_DEV_URANDOM));
+        return rtrim($value, "\0..\16");
+    }
+    
+    protected function mysqlAesKey($key) {
+    	
+    	$new_key = str_repeat(chr(0), 16);
+       for($i=0,$len=strlen($key);$i<$len;$i++){
+       	
+           $new_key[$i%16] = $new_key[$i%16] ^ $key[$i];
+       }
+      
+       return $new_key;
     }
 	
 }
