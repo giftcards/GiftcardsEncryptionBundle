@@ -4,7 +4,6 @@
         "psr-0": {
 	    	"Omni\\EncryptionBundle": ""
         }
-    }
+    },
     "target-dir": "Omni/EncryptionBundle"
-    
 }
