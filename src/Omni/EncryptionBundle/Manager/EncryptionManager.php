@@ -41,7 +41,10 @@ class EncryptionManager {
 	}
 	
 	public function aesEncrypt($value) {
-        if ($value === null){
+        
+		$value = $this->stringify($value);
+		
+		if ($value === null){
         	return null;
         }
 		
@@ -52,6 +55,9 @@ class EncryptionManager {
     }
 
     public function aesDecrypt($value) {
+		
+    	$value = $this->stringify($value);
+        
         if ($value === null) {
         	return null;
         }
@@ -69,6 +75,16 @@ class EncryptionManager {
        }
       
        return $new_key;
+    }
+    
+    protected function stringify($value) {
+    	
+    	if (!is_resource($value)) {
+    		
+    		return $value;
+    	}
+    	
+    	return stream_get_contents($value);
     }
 	
 }
