@@ -6,7 +6,7 @@ use Symfony\Component\HttpKernel\Log\LoggerInterface;
 class EncryptionManager {
 
 	protected $logger;
-	protected $container;
+	protected $encryptionString;
 	/**
 	 * Property to contain our Registry to the Doctrine bundle
 	 *
@@ -19,11 +19,11 @@ class EncryptionManager {
 	 * @param LoggerInterface $logger
 	 * @param Registry $doctrine
 	 */
-	public function __construct(LoggerInterface $logger, Registry $doctrine, $container){
+	public function __construct(LoggerInterface $logger, Registry $doctrine, $encryptionString){
 	
 		$this->logger = $logger;
 		$this->doctrine = $doctrine;
-		$this->container = $container;
+		$this->encryptionString = $encryptionString;
 	}
 	
 	/**
@@ -44,7 +44,7 @@ class EncryptionManager {
         if ($value === null){
         	return null;
         }
-		return RAWURLENCODE( TRIM( BASE64_ENCODE( MCRYPT_ENCRYPT( MCRYPT_RIJNDAEL_256, $this->container->getParameter('OMNI_ENCRYPTION_STRING'), $value, MCRYPT_MODE_ECB, MCRYPT_CREATE_IV( MCRYPT_GET_IV_SIZE( MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB ), MCRYPT_DEV_URANDOM ) ) ) ) );
+		return MCRYPT_ENCRYPT( MCRYPT_RIJNDAEL_256, $this->encryptionString, $value, MCRYPT_MODE_ECB, MCRYPT_CREATE_IV( MCRYPT_GET_IV_SIZE( MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB ), MCRYPT_DEV_URANDOM ) );
     }
 
     public function aesDecrypt($value) {
@@ -52,7 +52,7 @@ class EncryptionManager {
         	return null;
         }
 		
-		return TRIM( MCRYPT_DECRYPT( MCRYPT_RIJNDAEL_256, $this->container->getParameter('OMNI_ENCRYPTION_STRING'), BASE64_DECODE( STR_REPLACE( ' ', '+', RAWURLDECODE( $value ) ) ), MCRYPT_MODE_ECB, MCRYPT_CREATE_IV( MCRYPT_GET_IV_SIZE( MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB ), MCRYPT_DEV_URANDOM ) ) );
+		return TRIM( MCRYPT_DECRYPT( MCRYPT_RIJNDAEL_256, $this->encryptionString, $value, MCRYPT_MODE_ECB, MCRYPT_CREATE_IV( MCRYPT_GET_IV_SIZE( MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB ), MCRYPT_DEV_URANDOM ) ) );
     }
 	
 }
