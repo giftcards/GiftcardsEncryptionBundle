@@ -8,14 +8,24 @@ use Local\MerchantBundle\Entity\Creditcard;
 class AesEncryption
 {
 	protected $encryptionManager;
+	protected $encrypted;
+	protected $decrypted;
 	
 	public function __construct($encryptionManager){
 		$this->encryptionManager = $encryptionManager;
+		$this->encrypted = new \SplObjectStorage();
+		$this->decrypted = new \SplObjectStorage();
 	}
 	
     public function prePersist(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
+        
+        if($this->encrypted->contains($entity)){
+        	
+        	return;
+        }
+        
         $entityManager = $args->getEntityManager();
 
         $factory = $entityManager->getMetadataFactory();
@@ -26,6 +36,7 @@ class AesEncryption
 				$setmethod = 'set'.ucfirst($key);
 				$getmethod = 'get'.ucfirst($key);
 				$entity->$setmethod($this->encryptionManager->aesEncrypt($entity->$getmethod()));
+				$this->encrypted->attach($entity);
 			}
 		}
     }
@@ -33,6 +44,12 @@ class AesEncryption
 	public function preUpdate(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
+        
+        if($this->encrypted->contains($entity)){
+        	
+        	return;
+        }
+        
         $entityManager = $args->getEntityManager();
 
         $factory = $entityManager->getMetadataFactory();
@@ -43,6 +60,7 @@ class AesEncryption
 				$setmethod = 'set'.ucfirst($key);
 				$getmethod = 'get'.ucfirst($key);
 				$entity->$setmethod($this->encryptionManager->aesEncrypt($entity->$getmethod()));
+				$this->encrypted->attach($entity);
 			}
 		}
     }
@@ -50,6 +68,12 @@ class AesEncryption
 	public function postLoad(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
+        
+        if ($this->decrypted->contains($entity)) {
+        	
+        	return;
+        }
+        
         $entityManager = $args->getEntityManager();
 		
 		$factory = $entityManager->getMetadataFactory();
@@ -60,6 +84,7 @@ class AesEncryption
 				$setmethod = 'set'.ucfirst($key);
 				$getmethod = 'get'.ucfirst($key);
 				$entity->$setmethod($this->encryptionManager->aesDecrypt($entity->$getmethod()));
+				$this->decrypted->attach($entity);
 			}
 		}
 		
