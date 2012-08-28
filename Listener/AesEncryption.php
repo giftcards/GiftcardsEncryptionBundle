@@ -59,7 +59,9 @@ class AesEncryption
 			if ($attributes['type'] == 'aescrypt'){
 				$setmethod = 'set'.ucfirst($key);
 				$getmethod = 'get'.ucfirst($key);
-				$entity->$setmethod($this->encryptionManager->aesEncrypt($entity->$getmethod()));
+				$newValue = $this->encryptionManager->aesEncrypt($entity->$getmethod());
+				$entity->$setmethod($newValue);
+				$args->setNewValue($key, $value);
 				$this->encrypted->attach($entity);
 			}
 		}
