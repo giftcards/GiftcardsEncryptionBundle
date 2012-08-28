@@ -62,7 +62,11 @@ class AesEncryption
 				$getmethod = 'get'.ucfirst($key);
 				$newValue = $this->encryptionManager->aesEncrypt($entity->$getmethod());
 				$entity->$setmethod($newValue);
-				$args->setNewValue($key, $newValue);
+				
+				if ($args->hasChangedField($key)) {
+					
+					$args->setNewValue($key, $newValue);
+				}
 				$this->encrypted->attach($entity);
 			}
 		}
