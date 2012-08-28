@@ -3,6 +3,7 @@
 namespace Omni\EncryptionBundle\Listener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Local\MerchantBundle\Entity\Creditcard;
 
 class AesEncryption
@@ -41,7 +42,7 @@ class AesEncryption
 		}
     }
 	
-	public function preUpdate(LifecycleEventArgs $args)
+	public function preUpdate(PreUpdateEventArgs $args)
     {
         $entity = $args->getEntity();
         
@@ -61,7 +62,7 @@ class AesEncryption
 				$getmethod = 'get'.ucfirst($key);
 				$newValue = $this->encryptionManager->aesEncrypt($entity->$getmethod());
 				$entity->$setmethod($newValue);
-				$args->setNewValue($key, $value);
+				$args->setNewValue($key, $newValue);
 				$this->encrypted->attach($entity);
 			}
 		}
