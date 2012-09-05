@@ -97,6 +97,16 @@ class AesEncryption
 		
     }
 	
+    public function postUpdate(LifecycleEventArgs $args) {
+    	
+    	return $this->postSave($args);
+    }
+    
+    public function postPersist(LifecycleEventArgs $args) {
+    	
+    	return $this->postSave($args);
+    }
+    
     public function postSave(LifecycleEventArgs $args) {
     	
     	$entity = $args->getEntity();
