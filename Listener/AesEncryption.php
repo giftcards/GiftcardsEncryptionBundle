@@ -97,4 +97,29 @@ class AesEncryption
 		
     }
 	
+    public function postSave(LifecycleEventArgs $args) {
+    	
+    	$entity = $args->getEntity();
+    	
+    	if (!$this->encrypted->contains($entity)) {
+    		
+    		return;
+    	}
+    	
+    	$entityManager = $args->getEntityManager();
+    	
+    	$factory = $entityManager->getMetadataFactory();
+    	$metadata = $factory->getMetadataFor(get_class($entity));
+    	
+    	foreach ($metadata->fieldMappings as $key => $attributes){
+    		if ($attributes['type'] == 'aescrypt'){
+    			$setmethod = 'set'.ucfirst($key);
+    			$getmethod = 'get'.ucfirst($key);
+    			$entity->$setmethod($this->encryptionManager->aesDecrypt($entity->$getmethod()));
+    			$this->decrypted->attach($entity);
+    		}
+    	}
+    	
+    	$this->encrypted->detach($entity);
+    }
 }
