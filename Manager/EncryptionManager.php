@@ -1,6 +1,6 @@
 <?php
 namespace Omni\EncryptionBundle\Manager;
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Symfony\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 class EncryptionManager {
