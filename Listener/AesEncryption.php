@@ -2,6 +2,8 @@
 // src/Omni/EncriptionBundle/Listener/CreditcardEncryption.php
 namespace Omni\EncryptionBundle\Listener;
 
+use Omni\EncryptionBundle\Manager\EncryptionManager;
+
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Local\MerchantBundle\Entity\Creditcard;
@@ -12,7 +14,7 @@ class AesEncryption
 	protected $encrypted;
 	protected $decrypted;
 	
-	public function __construct($encryptionManager){
+	public function __construct(EncryptionManager $encryptionManager){
 		$this->encryptionManager = $encryptionManager;
 		$this->encrypted = new \SplObjectStorage();
 		$this->decrypted = new \SplObjectStorage();
@@ -28,15 +30,12 @@ class AesEncryption
         }
         
         $entityManager = $args->getEntityManager();
-
-        $factory = $entityManager->getMetadataFactory();
-		$metadata = $factory->getMetadataFor(get_class($entity));
-		
+    	$metadata = $entityManager->getMetadataFactory()->getMetadataFor(get_class($entity));
+        		
 		foreach ($metadata->fieldMappings as $key => $attributes){
 			if ($attributes['type'] == 'aescrypt'){
-				$setmethod = 'set'.ucfirst($key);
-				$getmethod = 'get'.ucfirst($key);
-				$entity->$setmethod($this->encryptionManager->aesEncrypt($entity->$getmethod()));
+				$encryptedValue = $this->encryptionManager->aesEncrypt($metadata->reflFields[$key]->getValue($entity));
+				$metadata->reflFields[$key]->setValue($entity, $encryptedValue);
 				$this->encrypted->attach($entity);
 			}
 		}
@@ -52,20 +51,16 @@ class AesEncryption
         }
         
         $entityManager = $args->getEntityManager();
-
-        $factory = $entityManager->getMetadataFactory();
-		$metadata = $factory->getMetadataFor(get_class($entity));
-		
+    	$metadata = $entityManager->getMetadataFactory()->getMetadataFor(get_class($entity));
+        		
 		foreach ($metadata->fieldMappings as $key => $attributes){
 			if ($attributes['type'] == 'aescrypt'){
-				$setmethod = 'set'.ucfirst($key);
-				$getmethod = 'get'.ucfirst($key);
-				$newValue = $this->encryptionManager->aesEncrypt($entity->$getmethod());
-				$entity->$setmethod($newValue);
-				
+				$encryptedValue = $this->encryptionManager->aesEncrypt($metadata->reflFields[$key]->getValue($entity));
+				$metadata->reflFields[$key]->setValue($entity, $encryptedValue);
+								
 				if ($args->hasChangedField($key)) {
 					
-					$args->setNewValue($key, $newValue);
+					$args->setNewValue($key, $encryptedValue);
 				}
 				$this->encrypted->attach($entity);
 			}
@@ -82,19 +77,15 @@ class AesEncryption
         }
         
         $entityManager = $args->getEntityManager();
-		
-		$factory = $entityManager->getMetadataFactory();
-		$metadata = $factory->getMetadataFor(get_class($entity));
-		
+    	$metadata = $entityManager->getMetadataFactory()->getMetadataFor(get_class($entity));
+				
 		foreach ($metadata->fieldMappings as $key => $attributes){
 			if ($attributes['type'] == 'aescrypt'){
-				$setmethod = 'set'.ucfirst($key);
-				$getmethod = 'get'.ucfirst($key);
-				$entity->$setmethod($this->encryptionManager->aesDecrypt($entity->$getmethod()));
+				$encryptedValue = $this->encryptionManager->aesDecrypt($metadata->reflFields[$key]->getValue($entity));
+				$metadata->reflFields[$key]->setValue($entity, $encryptedValue);
 				$this->decrypted->attach($entity);
 			}
 		}
-		
     }
 	
     public function postUpdate(LifecycleEventArgs $args) {
@@ -118,15 +109,13 @@ class AesEncryption
     	
     	$entityManager = $args->getEntityManager();
     	
-    	$factory = $entityManager->getMetadataFactory();
-    	$metadata = $factory->getMetadataFor(get_class($entity));
+    	$metadata = $entityManager->getMetadataFactory()->getMetadataFor(get_class($entity));
     	
     	foreach ($metadata->fieldMappings as $key => $attributes){
     		if ($attributes['type'] == 'aescrypt'){
-    			$setmethod = 'set'.ucfirst($key);
-    			$getmethod = 'get'.ucfirst($key);
-    			$entity->$setmethod($this->encryptionManager->aesDecrypt($entity->$getmethod()));
-    			$this->decrypted->attach($entity);
+				$encryptedValue = $this->encryptionManager->aesDecrypt($metadata->reflFields[$key]->getValue($entity));
+				$metadata->reflFields[$key]->setValue($entity, $encryptedValue);
+       			$this->decrypted->attach($entity);
     		}
     	}
     	

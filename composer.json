@@ -1,5 +1,9 @@
 {
 	"name": "omni/encryption-bundle",
+	"require": {
+	  
+	  	"symfony/symfony": "~2.2.0"  
+	},
     "autoload": {
         "psr-0": {
 	    	"Omni\\EncryptionBundle": ""
