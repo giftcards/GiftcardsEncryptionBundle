@@ -2,7 +2,7 @@
 	"name": "omni/encryption-bundle",
 	"require": {
 	  
-	  	"symfony/symfony": "~2.2.0"  
+	  	"symfony/symfony": "~2.2"  
 	},
     "autoload": {
         "psr-0": {
