@@ -87,4 +87,13 @@ class EncryptionManager {
     	return stream_get_contents($value);
     }
 	
+	/**
+	 * Sets the internal encryption string to the passed in value
+	 * @param string $encryptionString The new encryption string to use
+	 **/
+	public function setEncryptionString($encryptionString) {
+
+		$this->encryptionString = $encryptionString;
+	}
+
 }
