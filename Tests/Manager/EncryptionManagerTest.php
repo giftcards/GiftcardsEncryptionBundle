@@ -43,9 +43,6 @@ class EncryptionManagerTest extends AbstractExtendableTestCase
     public function testAesEmptyEncryptDecrypt()
     {
         $stringToEncode = '';
-        $encoded = $this->manager->aesEncrypt($stringToEncode);
-        $this->assertEquals('', $encoded);
-
         $decoded = $this->manager->aesDecrypt($stringToEncode);
         $this->assertEquals('', $decoded);
     }
@@ -53,9 +50,6 @@ class EncryptionManagerTest extends AbstractExtendableTestCase
     public function testAesSpaceEncryptDecrypt()
     {
         $stringToEncode = ' ';
-        $encoded = $this->manager->aesEncrypt($stringToEncode);
-        $this->assertEquals($stringToEncode, $encoded);
-
         $decoded = $this->manager->aesDecrypt($stringToEncode);
         $this->assertEquals($stringToEncode, $decoded);
     }

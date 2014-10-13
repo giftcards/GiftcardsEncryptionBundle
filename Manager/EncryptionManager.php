@@ -59,10 +59,6 @@ class EncryptionManager
             return null;
         }
 
-        if (strlen(trim($value)) < 1) {
-            return $value;
-        }
-
         $pad_value = 16 - (strlen($value) % 16);
         $value = str_pad($value, (16 * (floor(strlen($value) / 16) + 1)), chr($pad_value));
         return mcrypt_encrypt(
