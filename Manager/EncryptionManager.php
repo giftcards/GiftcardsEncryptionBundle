@@ -1,6 +1,9 @@
 <?php
 namespace Omni\EncryptionBundle\Manager;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
+
 class EncryptionManager
 {
 
@@ -18,8 +21,9 @@ class EncryptionManager
      * @param LoggerInterface $logger
      * @param Registry $doctrine
      */
-    public function __construct($logger, $doctrine, $encryptionString)
+    public function __construct(LoggerInterface $logger, Registry $doctrine, $encryptionString)
     {
+
         $this->logger = $logger;
         $this->doctrine = $doctrine;
         $this->encryptionString = $encryptionString;

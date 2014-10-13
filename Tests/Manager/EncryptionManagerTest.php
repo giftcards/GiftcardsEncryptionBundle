@@ -7,12 +7,14 @@ use Mockery;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
-class EncryptionManagerTest extends AbstractExtendableTestCase {
+class EncryptionManagerTest extends AbstractExtendableTestCase
+{
 
     protected $manager;
 
-    public function setUp() {
-        $this->logger = \Mockery::mock('Psr\\Log\\LoggerInterface');
+    public function setUp()
+    {
+        $this->logger = \Mockery::mock('Symfony\\Component\\HttpKernel\\Log\\LoggerInterface');
         $doctrine = \Mockery::mock('\\Doctrine\\Bundle\\DoctrineBundle\\Registry');
 
         $this->manager = new EncryptionManager($this->logger, $doctrine, "SuperSecretEncryptionString");
