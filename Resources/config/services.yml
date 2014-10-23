@@ -1,7 +1,7 @@
 services: 
     omni.encryption.encryption_manager:
         class: Omni\EncryptionBundle\Manager\EncryptionManager
-        arguments: ["@logger","@doctrine","%OMNI_ENCRYPTION_STRING%"]
+        arguments: ["@logger","%OMNI_ENCRYPTION_STRING%"]
   
     creditcard.listener:
         class: Omni\EncryptionBundle\Listener\AesEncryption

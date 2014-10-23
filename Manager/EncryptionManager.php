@@ -19,7 +19,7 @@ class EncryptionManager {
 	 * @param LoggerInterface $logger
 	 * @param Registry $doctrine
 	 */
-	public function __construct(LoggerInterface $logger, Registry $doctrine, $encryptionString){
+	public function __construct(LoggerInterface $logger, $encryptionString){
 	
 		$this->logger = $logger;
 		$this->doctrine = $doctrine;
