@@ -35,7 +35,7 @@ class AddKeySourcesPass implements CompilerPassInterface
                     ;
                 }
                 
-                $chain->addMethodCall('addServiceId', array(new Reference($id)));
+                $chain->addMethodCall('addServiceId', array($id));
             }
         }
     }
