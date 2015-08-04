@@ -24,13 +24,6 @@ class AddKeySourcesPass implements CompilerPassInterface
 
         foreach ($container->findTaggedServiceIds('omni.encryption.key_source') as $id => $tags) {
             foreach ($tags as $tag) {
-                if (!isset($tag['alias'])) {
-                    throw new \InvalidArgumentException(sprintf(
-                        'The service "%s" tagged omni.encryption.key_source must have an alias key given.',
-                        $id
-                    ));
-                }
-                
                 if (!empty($tag['prefix'])) {
                     $internalId = $id;
                     $id = sprintf('%s.prefixed', $id);
@@ -42,7 +35,7 @@ class AddKeySourcesPass implements CompilerPassInterface
                     ;
                 }
                 
-                $chain->addMethodCall('set', array($tag['alias'], new Reference($id)));
+                $chain->addMethodCall('addServiceId', array(new Reference($id)));
             }
         }
     }
