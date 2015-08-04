@@ -30,6 +30,18 @@ class AddKeySourcesPass implements CompilerPassInterface
                         $id
                     ));
                 }
+                
+                if (!empty($tag['prefix'])) {
+                    $internalId = $id;
+                    $id = sprintf('%s.prefixed', $id);
+                    $container->register($id, 'Omni\Encryption\Key\PrefixKeyNameSource')
+                        ->setArguments(array(
+                            $tag['prefix'],
+                            new Reference($internalId)
+                        ))
+                    ;
+                }
+                
                 $chain->addMethodCall('set', array($tag['alias'], new Reference($id)));
             }
         }
