@@ -24,9 +24,5 @@ class OmniEncryptionExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-        $container
-            ->getDefinition('omni.encryption.encryption_manager')
-            ->replaceArgument(2, $container->getParameterBag()->resolveValue($config['encryption_string']))
-        ;
     }
 }

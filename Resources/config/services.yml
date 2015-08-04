@@ -1,14 +1,29 @@
 services: 
-    omni.encryption.encryption_manager:
-        class: Omni\EncryptionBundle\Manager\EncryptionManager
-        arguments: ["@logger","%OMNI_ENCRYPTION_STRING%"]
-  
-    creditcard.listener:
-        class: Omni\EncryptionBundle\Listener\AesEncryption
+
+    omni.encryption.key_source:
+        alias: omni.encryption.key_source.chain
+        
+    omni.encryption.encrypted_data_store.registry:
+        class: Omni\Encryption\EncryptedData\StoreRegistry
+        
+    omni.encryption.encryptor.registry:
+        class: Omni\Encryption\Encryptor\EncryptorRegistry
+        
+    omni.encryption.key_source.chain:
+        class: Omni\Encryption\Key\ContainerAwareChainSource
+        arguments:
+            - @service_container
+        
+    omni.encryption.encryptor.mysql_aes_encryptor:
+        class: Omni\Encryption\Encryptor\MysqlAesEncryptor
         tags:
-            - { name: doctrine.event_listener, event: preUpdate }
-            - { name: doctrine.event_listener, event: prePersist }
-            - { name: doctrine.event_listener, event: postLoad }
-            - { name: doctrine.event_listener, event: postUpdate }
-            - { name: doctrine.event_listener, event: postPersist }
-        arguments: ["@omni.encryption.encryption_manager"]
+            - { name: omni.encryption.encryptor }
+            
+    omni.encryption.command.migrate_key:
+        class: Omni\Encryption\Command\MigrateKeyCommand
+        arguments:
+            - @omni.encryption.key_source
+            - @omni.encryption.encrypted_data_store.registry
+            - @omni.encryption.encryptor.registry
+        tags:
+            - { name: console.command }

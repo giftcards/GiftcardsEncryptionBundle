@@ -1,7 +1,8 @@
 {
   "name": "omni/encryption-bundle",
   "require": {
-    "symfony/symfony": "~2.2"
+    "symfony/symfony": "~2.3",
+    "omni/encryption": "dev-master-new-encryption"
   },
   "require-dev": {
     "omni/testing-bundle": "~1.6",
