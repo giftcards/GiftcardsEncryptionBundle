@@ -4,6 +4,7 @@ namespace Omni\EncryptionBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -24,5 +25,14 @@ class OmniEncryptionExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+
+        $profileRegistry = $container->getDefinition('omni.encryption.profile.registry');
+        
+        foreach ($config['profiles'] as $profile => $profileConfig) {
+            $profileRegistry->addMethodCall('set', array(new Definition(
+                'Omni\Encryption\Profile\Profile',
+                array($profileConfig['cipher'], $profileConfig['key_name'])
+            )));
+        }
     }
 }

@@ -22,7 +22,15 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('encryption_string')->defaultValue('%omni_encryption_string%')->end()
+                ->arrayNode('profiles')
+                    ->useAttributeAsKey('name')
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('cipher')->isRequired()->cannotBeEmpty()->end()
+                            ->scalarNode('key_name')->isRequired()->cannotBeEmpty()->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 

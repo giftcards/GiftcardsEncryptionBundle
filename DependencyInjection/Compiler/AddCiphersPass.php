@@ -12,17 +12,17 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-class AddEncryptorsPass implements CompilerPassInterface
+class AddCiphersPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('omni.encryption.encryptor.registry')) {
+        if (!$container->hasDefinition('omni.encryption.cipher.registry')) {
             return;
         }
         
-        $registry = $container->getDefinition('omni.encryption.encryptor.registry');
+        $registry = $container->getDefinition('omni.encryption.cipher.registry');
 
-        foreach ($container->findTaggedServiceIds('omni.encryption.encryptor') as $id => $tags) {
+        foreach ($container->findTaggedServiceIds('omni.encryption.cipher') as $id => $tags) {
             $registry->addMethodCall('add', array(new Reference($id)));
         }
     }
