@@ -20,7 +20,7 @@ services:
         arguments:
             - @service_container
         
-    omni.encryption.encryptor.mysql_aes_encryptor:
+    omni.encryption.cipher.mysql_aes:
         class: Omni\Encryption\Cipher\MysqlAes
         tags:
             - { name: omni.encryption.cipher }
@@ -41,6 +41,8 @@ services:
             - @omni.encryption.cipher.registry
             - @omni.encryption.key_source
             - @omni.encryption.profile.registry
+            - @omni.encryption.cipher_text_serializer
+            - default_profile
         
     omni.encryption.command.migrate_key:
         class: Omni\Encryption\Command\MigrateKeyCommand

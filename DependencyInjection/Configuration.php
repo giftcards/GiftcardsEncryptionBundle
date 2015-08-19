@@ -31,6 +31,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->scalarNode('default_profile')->defaultNull()->end()
             ->end()
         ;
 

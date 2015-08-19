@@ -34,5 +34,10 @@ class OmniEncryptionExtension extends Extension
                 array($profileConfig['cipher'], $profileConfig['key_name'])
             )));
         }
+        
+        $container
+            ->getDefinition('omni.encryption.encryptor')
+            ->replaceArgument(4, $config['default_profile'])
+        ;
     }
 }
