@@ -7,7 +7,7 @@ services:
         alias: omni.encryption.cipher_text_serializer.chain
         
     omni.encryption.cipher_text_store.registry:
-        class: Omni\Encryption\CipherText\StoreRegistry
+        class: Omni\Encryption\CipherText\Store\StoreRegistry
         
     omni.encryption.cipher.registry:
         class: Omni\Encryption\Cipher\CipherRegistry
