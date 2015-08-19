@@ -29,7 +29,7 @@ class OmniEncryptionExtension extends Extension
         $profileRegistry = $container->getDefinition('omni.encryption.profile.registry');
         
         foreach ($config['profiles'] as $profile => $profileConfig) {
-            $profileRegistry->addMethodCall('set', array(new Definition(
+            $profileRegistry->addMethodCall('set', array($profile, new Definition(
                 'Omni\Encryption\Profile\Profile',
                 array($profileConfig['cipher'], $profileConfig['key_name'])
             )));

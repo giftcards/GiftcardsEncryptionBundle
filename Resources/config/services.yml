@@ -3,6 +3,9 @@ services:
     omni.encryption.key_source:
         alias: omni.encryption.key_source.chain
         
+    omni.encryption.cipher_text_serializer:
+        alias: omni.encryption.cipher_text_serializer.chain
+        
     omni.encryption.cipher_text_store.registry:
         class: Omni\Encryption\CipherText\StoreRegistry
         
@@ -20,12 +23,17 @@ services:
     omni.encryption.encryptor.mysql_aes_encryptor:
         class: Omni\Encryption\Cipher\MysqlAes
         tags:
-            - { name: omni.encryption.encryptor }
+            - { name: omni.encryption.cipher }
         
-    omni.encryption.encryptor.no_op_encryptor:
+    omni.encryption.cipher.no_op:
         class: Omni\Encryption\Cipher\NoOp
         tags:
-            - { name: omni.encryption.encryptor }
+            - { name: omni.encryption.cipher }
+    
+    omni.encryption.cipher_text_serializer.chain:
+        class: Omni\Encryption\CipherText\Serializer\ContainerAwareChainSerializer
+        arguments:
+            - @service_container
      
     omni.encryption.encryptor:
         class: Omni\Encryption\Encryptor
