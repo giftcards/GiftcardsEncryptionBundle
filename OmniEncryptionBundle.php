@@ -2,7 +2,7 @@
 
 namespace Omni\EncryptionBundle;
 
-use Omni\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextGroupStoresPass;
+use Omni\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextStoresPass;
 use Omni\EncryptionBundle\DependencyInjection\Compiler\AddCiphersPass;
 use Omni\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextSerializersPass;
 use Omni\EncryptionBundle\DependencyInjection\Compiler\AddKeySourcesPass;
@@ -14,7 +14,7 @@ class OmniEncryptionBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container
-            ->addCompilerPass(new AddCipherTextGroupStoresPass())
+            ->addCompilerPass(new AddCipherTextStoresPass())
             ->addCompilerPass(new AddCiphersPass())
             ->addCompilerPass(new AddKeySourcesPass())
             ->addCompilerPass(new AddCipherTextSerializersPass())

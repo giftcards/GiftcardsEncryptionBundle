@@ -8,18 +8,18 @@
 
 namespace Omni\EncryptionBundle\Tests\DependencyInjection\Compiler;
 
-use Omni\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextGroupStoresPass;
+use Omni\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextStoresPass;
 use Omni\TestingBundle\TestCase\Extension\AbstractExtendableTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AddCipherTextStoresPassTest extends AbstractExtendableTestCase
 {
-    /** @var  AddCipherTextGroupStoresPass */
+    /** @var  AddCipherTextStoresPass */
     protected $pass;
 
     public function setUp()
     {
-        $this->pass = new AddCipherTextGroupStoresPass();
+        $this->pass = new AddCipherTextStoresPass();
     }
 
     public function testCompileWithNoRegistry()

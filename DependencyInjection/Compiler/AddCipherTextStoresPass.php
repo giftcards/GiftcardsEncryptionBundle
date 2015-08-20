@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-class AddCipherTextGroupStoresPass implements CompilerPassInterface
+class AddCipherTextStoresPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
@@ -30,7 +30,7 @@ class AddCipherTextGroupStoresPass implements CompilerPassInterface
                         $id
                     ));
                 }
-                $registry->addMethodCall('set', array($tag['alias'], new Reference($id)));
+                $registry->addMethodCall('setServiceId', array($tag['alias'], $id));
             }
         }
     }
