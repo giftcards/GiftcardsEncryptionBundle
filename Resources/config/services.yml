@@ -45,7 +45,7 @@ services:
             - default_profile
         
     omni.encryption.command.migrate_key:
-        class: Omni\Encryption\Command\MigrateKeyCommand
+        class: Omni\Encryption\Command\RotateEncryptionProfileCommand
         arguments:
             - @omni.encryption.cipher_text_store.registry
             - @omni.encryption.encryptor
