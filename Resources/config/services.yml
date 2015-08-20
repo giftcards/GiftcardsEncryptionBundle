@@ -44,7 +44,7 @@ services:
             - @omni.encryption.cipher_text_serializer
             - default_profile
         
-    omni.encryption.command.migrate_key:
+    omni.encryption.command.rotate_encryption_profile:
         class: Omni\Encryption\Command\RotateEncryptionProfileCommand
         arguments:
             - @omni.encryption.cipher_text_store.registry
