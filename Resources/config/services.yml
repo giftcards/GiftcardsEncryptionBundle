@@ -6,8 +6,8 @@ services:
     omni.encryption.cipher_text_serializer:
         alias: omni.encryption.cipher_text_serializer.chain
         
-    omni.encryption.cipher_text_store.registry:
-        class: Omni\Encryption\CipherText\Store\ContainerAwareStoreRegistry
+    omni.encryption.cipher_text_rotator.registry:
+        class: Omni\Encryption\CipherText\Rotator\ContainerAwareRotatorRegistry
         arguments:
             - @service_container
         
@@ -49,7 +49,7 @@ services:
     omni.encryption.command.rotate_encryption_profile:
         class: Omni\Encryption\Command\RotateEncryptionProfileCommand
         arguments:
-            - @omni.encryption.cipher_text_store.registry
+            - @omni.encryption.cipher_text_rotator.registry
             - @omni.encryption.encryptor
         tags:
             - { name: console.command }
