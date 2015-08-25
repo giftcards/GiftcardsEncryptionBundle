@@ -26,7 +26,7 @@ class AddCipherTextRotatorsPass implements CompilerPassInterface
             foreach ($tags as $tag) {
                 if (!isset($tag['alias'])) {
                     throw new \InvalidArgumentException(sprintf(
-                        'The service "%s" tagged omni.encryption.cipher_text_rotator must have an alias key given.',
+                        'The service "%s" tagged omni.encryption.cipher_text_rotator must have an "alias" key given.',
                         $id
                     ));
                 }

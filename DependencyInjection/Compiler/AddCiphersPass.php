@@ -23,7 +23,20 @@ class AddCiphersPass implements CompilerPassInterface
         $registry = $container->getDefinition('omni.encryption.cipher.registry');
 
         foreach ($container->findTaggedServiceIds('omni.encryption.cipher') as $id => $tags) {
-            $registry->addMethodCall('add', array(new Reference($id)));
-        }
+            if (count($tags) > 1) {
+                throw new \InvalidArgumentException(sprintf(
+                    'The service "%s" tagged omni.encryption.cipher must have only one of those tags %d were found.',
+                    $id,
+                    count($tags)
+                ));
+            }
+            $tag = $tags[0];
+            if (!isset($tag['alias'])) {
+                throw new \InvalidArgumentException(sprintf(
+                    'The service "%s" tagged omni.encryption.cipher must have an "alias" key given.',
+                    $id
+                ));
+            }
+            $registry->addMethodCall('setServiceId', array($tag['alias'], $id));        }
     }
 }

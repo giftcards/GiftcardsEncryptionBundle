@@ -24,7 +24,7 @@ class AddCipherTextRotatorsPassTest extends AbstractExtendableTestCase
         $this->pass = new AddCipherTextRotatorsPass();
     }
 
-    public function testCompileWithNoRegistry()
+    public function testProcessWithNoRegistry()
     {
         $this->pass->process(new ContainerBuilder());
     }
@@ -54,28 +54,28 @@ class AddCipherTextRotatorsPassTest extends AbstractExtendableTestCase
         );
         $this->pass->process($container);
         $this->assertContains(
-            array('setServiceId', array('rotator1', new Reference('rotator1'))),
+            array('setServiceId', array('rotator1', 'rotator1')),
             $container->getDefinition('omni.encryption.cipher_text_rotator.registry')->getMethodCalls(),
             '',
             false,
             false
         );
         $this->assertContains(
-            array('setServiceId', array('rotator2', new Reference('rotator23'))),
+            array('setServiceId', array('rotator2', 'rotator23')),
             $container->getDefinition('omni.encryption.cipher_text_rotator.registry')->getMethodCalls(),
             '',
             false,
             false
         );
         $this->assertContains(
-            array('setServiceId', array('rotator3', new Reference('rotator23'))),
+            array('setServiceId', array('rotator3', 'rotator23')),
             $container->getDefinition('omni.encryption.cipher_text_rotator.registry')->getMethodCalls(),
             '',
             false,
             false
         );
         $this->assertContains(
-            array('setServiceId', array('rotator4', new Reference('rotator4'))),
+            array('setServiceId', array('rotator4', 'rotator4')),
             $container->getDefinition('omni.encryption.cipher_text_rotator.registry')->getMethodCalls(),
             '',
             false,

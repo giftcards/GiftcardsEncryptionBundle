@@ -24,11 +24,12 @@ class AddKeySourcesPass implements CompilerPassInterface
 
         foreach ($container->findTaggedServiceIds('omni.encryption.key_source') as $id => $tags) {
             foreach ($tags as $tag) {
+                $serviceId = $id;
                 if (!empty($tag['prefix'])) {
                     $internalId = $id;
-                    $id = sprintf('%s.prefixed', $id);
+                    $serviceId = sprintf('%s.prefixed.%s', $id, $tag['prefix']);
                     $container
-                        ->register($id, 'Omni\Encryption\Key\PrefixKeyNameSource')
+                        ->register($serviceId, 'Omni\Encryption\Key\PrefixKeyNameSource')
                         ->setArguments(array(
                             $tag['prefix'],
                             new Reference($internalId)
@@ -36,7 +37,7 @@ class AddKeySourcesPass implements CompilerPassInterface
                     ;
                 }
                 
-                $chain->addMethodCall('addServiceId', array($id));
+                $chain->addMethodCall('addServiceId', array($serviceId));
             }
         }
     }
