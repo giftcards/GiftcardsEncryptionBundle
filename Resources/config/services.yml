@@ -12,7 +12,9 @@ services:
             - @service_container
         
     omni.encryption.cipher.registry:
-        class: Omni\Encryption\Cipher\CipherRegistry
+        class: Omni\Encryption\Cipher\ContainerAwareCipherRegistry
+        arguments:
+            - @service_container
         
     omni.encryption.profile.registry:
         class: Omni\Encryption\Profile\ProfileRegistry
