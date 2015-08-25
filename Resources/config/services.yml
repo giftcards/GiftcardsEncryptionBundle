@@ -25,12 +25,12 @@ services:
     omni.encryption.cipher.mysql_aes:
         class: Omni\Encryption\Cipher\MysqlAes
         tags:
-            - { name: omni.encryption.cipher }
+            - { name: omni.encryption.cipher, alias: mysql_aes }
         
     omni.encryption.cipher.no_op:
         class: Omni\Encryption\Cipher\NoOp
         tags:
-            - { name: omni.encryption.cipher }
+            - { name: omni.encryption.cipher, alias: no_op }
     
     omni.encryption.cipher_text_serializer.chain:
         class: Omni\Encryption\CipherText\Serializer\ContainerAwareChainSerializer
