@@ -13,6 +13,7 @@ use Omni\TestingBundle\TestCase\Extension\AbstractExtendableTestCase;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 
 class OmniEncryptionExtensionTest extends AbstractExtendableTestCase
 {
@@ -89,6 +90,51 @@ class OmniEncryptionExtensionTest extends AbstractExtendableTestCase
             '',
             false,
             false
+        );
+    }
+
+    public function testLoadWhereKeyFallbacksAreConfigured()
+    {
+        $container = new ContainerBuilder();
+        $fallbacks = array(
+            'key1' => array(
+                'key3',
+                'key4'
+            ),
+            'key2' => array(
+                'key5',
+                'key6',
+                'key7',
+            )
+        );
+        $this->extension->load(array(array(
+            'key_sources' => array(
+                'key_fallbacks' => $fallbacks,
+            )
+        )), $container);
+        $this->assertEquals('omni.encryption.key_source.fallback', $container->getAlias('omni.encryption.key_source'));
+        $this->assertEquals(
+            new Definition('Omni\Encryption\Key\FallbackKeysSource', array($fallbacks, new Reference('omni.encryption.key_source.chain'))),
+            $container->getDefinition('omni.encryption.key_source.fallback')
+        );
+    }
+
+    public function testLoadWhereKeyMapIsConfigured()
+    {
+        $container = new ContainerBuilder();
+        $map = array(
+            'key1' => 'key3',
+            'key2' => 'key5',
+        );
+        $this->extension->load(array(array(
+            'key_sources' => array(
+                'key_map' => $map,
+            )
+        )), $container);
+        $this->assertEquals('omni.encryption.key_source.map', $container->getAlias('omni.encryption.key_source'));
+        $this->assertEquals(
+            new Definition('Omni\Encryption\Key\MapKeySource', array($map, new Reference('omni.encryption.key_source.chain'))),
+            $container->getDefinition('omni.encryption.key_source.map')
         );
     }
 }
