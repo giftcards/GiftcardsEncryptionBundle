@@ -42,23 +42,23 @@ class OmniEncryptionExtension extends Extension
         ;
         
         if (count($config['key_sources']['key_fallbacks'])) {
-            $container->register('omni.encryption.key_source.fallback', 'Omni\Encryption\Key\FallbackKeysSource')
+            $container->register('omni.encryption.key_source.fallbacks', 'Omni\Encryption\Key\FallbacksSource')
                 ->setArguments(array(
                     $config['key_sources']['key_fallbacks'],
                     new Reference((string)$container->getAlias('omni.encryption.key_source'))
                 ))
             ;
-            $container->setAlias('omni.encryption.key_source', 'omni.encryption.key_source.fallback');
+            $container->setAlias('omni.encryption.key_source', 'omni.encryption.key_source.fallbacks');
         }
         
         if (count($config['key_sources']['key_map'])) {
-            $container->register('omni.encryption.key_source.map', 'Omni\Encryption\Key\MapKeySource')
+            $container->register('omni.encryption.key_source.mapping', 'Omni\Encryption\Key\MappingSource')
                 ->setArguments(array(
                     $config['key_sources']['key_map'],
                     new Reference((string)$container->getAlias('omni.encryption.key_source'))
                 ))
             ;
-            $container->setAlias('omni.encryption.key_source', 'omni.encryption.key_source.map');
+            $container->setAlias('omni.encryption.key_source', 'omni.encryption.key_source.mapping');
         }
     }
 }

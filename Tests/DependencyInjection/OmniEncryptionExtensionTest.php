@@ -112,10 +112,10 @@ class OmniEncryptionExtensionTest extends AbstractExtendableTestCase
                 'key_fallbacks' => $fallbacks,
             )
         )), $container);
-        $this->assertEquals('omni.encryption.key_source.fallback', $container->getAlias('omni.encryption.key_source'));
+        $this->assertEquals('omni.encryption.key_source.fallbacks', $container->getAlias('omni.encryption.key_source'));
         $this->assertEquals(
-            new Definition('Omni\Encryption\Key\FallbackKeysSource', array($fallbacks, new Reference('omni.encryption.key_source.chain'))),
-            $container->getDefinition('omni.encryption.key_source.fallback')
+            new Definition('Omni\Encryption\Key\FallbacksSource', array($fallbacks, new Reference('omni.encryption.key_source.chain'))),
+            $container->getDefinition('omni.encryption.key_source.fallbacks')
         );
     }
 
@@ -131,10 +131,10 @@ class OmniEncryptionExtensionTest extends AbstractExtendableTestCase
                 'key_map' => $map,
             )
         )), $container);
-        $this->assertEquals('omni.encryption.key_source.map', $container->getAlias('omni.encryption.key_source'));
+        $this->assertEquals('omni.encryption.key_source.mapping', $container->getAlias('omni.encryption.key_source'));
         $this->assertEquals(
-            new Definition('Omni\Encryption\Key\MapKeySource', array($map, new Reference('omni.encryption.key_source.chain'))),
-            $container->getDefinition('omni.encryption.key_source.map')
+            new Definition('Omni\Encryption\Key\MappingSource', array($map, new Reference('omni.encryption.key_source.chain'))),
+            $container->getDefinition('omni.encryption.key_source.mapping')
         );
     }
 }
