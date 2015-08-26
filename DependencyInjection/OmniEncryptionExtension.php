@@ -41,20 +41,20 @@ class OmniEncryptionExtension extends Extension
             ->replaceArgument(4, $config['default_profile'])
         ;
         
-        if (count($config['key_sources']['key_fallbacks'])) {
+        if (count($config['keys']['fallbacks'])) {
             $container->register('omni.encryption.key_source.fallbacks', 'Omni\Encryption\Key\FallbacksSource')
                 ->setArguments(array(
-                    $config['key_sources']['key_fallbacks'],
+                    $config['keys']['fallbacks'],
                     new Reference((string)$container->getAlias('omni.encryption.key_source'))
                 ))
             ;
             $container->setAlias('omni.encryption.key_source', 'omni.encryption.key_source.fallbacks');
         }
         
-        if (count($config['key_sources']['key_map'])) {
+        if (count($config['keys']['map'])) {
             $container->register('omni.encryption.key_source.mapping', 'Omni\Encryption\Key\MappingSource')
                 ->setArguments(array(
-                    $config['key_sources']['key_map'],
+                    $config['keys']['map'],
                     new Reference((string)$container->getAlias('omni.encryption.key_source'))
                 ))
             ;

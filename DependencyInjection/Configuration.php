@@ -22,15 +22,15 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->arrayNode('key_sources')
+                ->arrayNode('keys')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->arrayNode('key_map')
+                        ->arrayNode('map')
                             ->defaultValue(array())
                             ->useAttributeAsKey('name')
                             ->prototype('scalar')->cannotBeEmpty()->end()
                         ->end()
-                        ->arrayNode('key_fallbacks')
+                        ->arrayNode('fallbacks')
                             ->defaultValue(array())
                             ->useAttributeAsKey('name')
                             ->prototype('array')

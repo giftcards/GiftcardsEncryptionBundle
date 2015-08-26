@@ -108,8 +108,8 @@ class OmniEncryptionExtensionTest extends AbstractExtendableTestCase
             )
         );
         $this->extension->load(array(array(
-            'key_sources' => array(
-                'key_fallbacks' => $fallbacks,
+            'keys' => array(
+                'fallbacks' => $fallbacks,
             )
         )), $container);
         $this->assertEquals('omni.encryption.key_source.fallbacks', $container->getAlias('omni.encryption.key_source'));
@@ -127,8 +127,8 @@ class OmniEncryptionExtensionTest extends AbstractExtendableTestCase
             'key2' => 'key5',
         );
         $this->extension->load(array(array(
-            'key_sources' => array(
-                'key_map' => $map,
+            'keys' => array(
+                'map' => $map,
             )
         )), $container);
         $this->assertEquals('omni.encryption.key_source.mapping', $container->getAlias('omni.encryption.key_source'));
