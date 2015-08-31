@@ -6,6 +6,9 @@ services:
     omni.encryption.cipher_text_serializer:
         alias: omni.encryption.cipher_text_serializer.chain
         
+    omni.encryption.cipher_text_deserializer:
+        alias: omni.encryption.cipher_text_deserializer.chain
+        
     omni.encryption.cipher_text_rotator.registry:
         class: Omni\Encryption\CipherText\Rotator\ContainerAwareRotatorRegistry
         arguments:
@@ -38,6 +41,11 @@ services:
         class: Omni\Encryption\CipherText\Serializer\ContainerAwareChainSerializer
         arguments:
             - @service_container
+    
+    omni.encryption.cipher_text_deserializer.chain:
+        class: Omni\Encryption\CipherText\Serializer\ContainerAwareChainDeserializer
+        arguments:
+            - @service_container
      
     omni.encryption.encryptor:
         class: Omni\Encryption\Encryptor
@@ -46,6 +54,7 @@ services:
             - @omni.encryption.key_source
             - @omni.encryption.profile.registry
             - @omni.encryption.cipher_text_serializer
+            - @omni.encryption.cipher_text_deserializer
             - default_profile
         
     omni.encryption.command.rotate_encryption_profile:

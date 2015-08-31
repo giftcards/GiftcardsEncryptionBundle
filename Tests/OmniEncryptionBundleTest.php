@@ -37,7 +37,7 @@ class OmniEncryptionBundleTest extends AbstractExtendableTestCase
                 ->getMock()
                 ->shouldReceive('addCompilerPass')
                 ->once()
-                ->with('Omni\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextSerializersPass')
+                ->with('Omni\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextSerializersDeserializersPass')
                 ->andReturn(\Mockery::self())
                 ->getMock()
                 ->shouldReceive('addCompilerPass')

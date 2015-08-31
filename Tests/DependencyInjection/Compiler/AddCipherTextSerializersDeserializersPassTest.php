@@ -8,20 +8,20 @@
 
 namespace Omni\EncryptionBundle\Tests\DependencyInjection\Compiler;
 
-use Omni\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextSerializersPass;
+use Omni\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextSerializersDeserializersPass;
 use Omni\TestingBundle\TestCase\Extension\AbstractExtendableTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-class AddCipherTextSerializersPassTest extends AbstractExtendableTestCase
+class AddCipherTextSerializersDeserializersPassTest extends AbstractExtendableTestCase
 {
-    /** @var  AddCipherTextSerializersPass */
+    /** @var  AddCipherTextSerializersDeserializersPass */
     protected $pass;
 
     public function setUp()
     {
-        $this->pass = new AddCipherTextSerializersPass();
+        $this->pass = new AddCipherTextSerializersDeserializersPass();
     }
     
     public function testProcessWithNoChain()
@@ -29,10 +29,11 @@ class AddCipherTextSerializersPassTest extends AbstractExtendableTestCase
         $this->pass->process(new ContainerBuilder());
     }
 
-    public function testProcessWithChain()
+    public function testProcessWithChains()
     {
         $container = new ContainerBuilder();
         $container->setDefinition('omni.encryption.cipher_text_serializer.chain', new Definition());
+        $container->setDefinition('omni.encryption.cipher_text_deserializer.chain', new Definition());
         $container->setDefinition('not_serializer', new Definition());
         $container->setDefinition('serializer1', new Definition())->addTag(
             'omni.encryption.cipher_text_serializer',
@@ -49,6 +50,23 @@ class AddCipherTextSerializersPassTest extends AbstractExtendableTestCase
         ;
         $container->setDefinition('serializer4', new Definition())->addTag(
             'omni.encryption.cipher_text_serializer'
+        );
+        $container->setDefinition('not_deserializer', new Definition());
+        $container->setDefinition('deserializer1', new Definition())->addTag(
+            'omni.encryption.cipher_text_deserializer',
+            array('priority' => 56)
+        );
+        $container->setDefinition('deserializer23', new Definition())
+            ->addTag(
+                'omni.encryption.cipher_text_deserializer',
+                array('priority' => 23)
+            )
+            ->addTag(
+                'omni.encryption.cipher_text_deserializer'
+            )
+        ;
+        $container->setDefinition('deserializer4', new Definition())->addTag(
+            'omni.encryption.cipher_text_deserializer'
         );
         $this->pass->process($container);
         $this->assertContains(
@@ -79,6 +97,33 @@ class AddCipherTextSerializersPassTest extends AbstractExtendableTestCase
             false,
             false
         );
+        $this->assertContains(
+            array('addServiceId', array('deserializer1', 56)),
+            $container->getDefinition('omni.encryption.cipher_text_deserializer.chain')->getMethodCalls(),
+            '',
+            false,
+            false
+        );
+        $this->assertContains(
+            array('addServiceId', array('deserializer23', 23)),
+            $container->getDefinition('omni.encryption.cipher_text_deserializer.chain')->getMethodCalls(),
+            '',
+            false,
+            false
+        );
+        $this->assertContains(
+            array('addServiceId', array('deserializer23', 0)),
+            $container->getDefinition('omni.encryption.cipher_text_deserializer.chain')->getMethodCalls(),
+            '',
+            false,
+            false
+        );
+        $this->assertContains(
+            array('addServiceId', array('deserializer4', 0)),
+            $container->getDefinition('omni.encryption.cipher_text_deserializer.chain')->getMethodCalls(),
+            '',
+            false,
+            false
+        );
     }
-
 }
