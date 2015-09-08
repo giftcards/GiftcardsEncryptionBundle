@@ -137,4 +137,26 @@ class OmniEncryptionExtensionTest extends AbstractExtendableTestCase
             $container->getDefinition('omni.encryption.key_source.mapping')
         );
     }
+
+    public function testLoadWhereCacheIsTrue()
+    {
+        $container = new ContainerBuilder();
+        $map = array(
+            'key1' => 'key3',
+            'key2' => 'key5',
+        );
+        $this->extension->load(array(array(
+            'keys' => array(
+                'cache' => true,
+            )
+        )), $container);
+        $this->assertEquals('omni.encryption.key_source.caching', $container->getAlias('omni.encryption.key_source'));
+        $this->assertEquals(
+            new Definition('Omni\Encryption\Key\CachingSource', array(
+                new Reference('omni.encryption.key_source.chain'),
+                new Definition('Doctrine\Common\Cache\ArrayCache')
+            )),
+            $container->getDefinition('omni.encryption.key_source.caching')
+        );
+    }
 }
