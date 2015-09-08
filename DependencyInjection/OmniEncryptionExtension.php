@@ -60,5 +60,16 @@ class OmniEncryptionExtension extends Extension
             ;
             $container->setAlias('omni.encryption.key_source', 'omni.encryption.key_source.mapping');
         }
+        
+        if ($config['key_sources']['cache']) {
+            $container->register('omni.encryption.key_source.caching', 'Omni\Encryption\Key\CachingSource')
+                ->setArguments(array(
+                    $config['keys']['map'],
+                    new Reference((string)$container->getAlias('omni.encryption.key_source')),
+                    new Definition('Doctrine\Common\Cache\ArrayCache')
+                ))
+            ;
+            $container->setAlias('omni.encryption.key_source', 'omni.encryption.key_source.caching');
+        }
     }
 }
