@@ -6,15 +6,15 @@
  * Time: 3:16 PM
  */
 
-namespace Omni\EncryptionBundle\Tests\DependencyInjection\Compiler;
+namespace Giftcards\EncryptionBundle\Tests\DependencyInjection\Compiler;
 
-use Omni\EncryptionBundle\DependencyInjection\Compiler\AddCiphersPass;
-use Omni\TestingBundle\TestCase\Extension\AbstractExtendableTestCase;
+use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCiphersPass;
+use Giftcards\Encryption\Tests\AbstractTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-class AddCiphersPassTest extends AbstractExtendableTestCase
+class AddCiphersPassTest extends AbstractTestCase
 {
     /** @var  AddCiphersPass */
     protected $pass;
@@ -32,40 +32,40 @@ class AddCiphersPassTest extends AbstractExtendableTestCase
     public function testProcessWithRegistry()
     {
         $container = new ContainerBuilder();
-        $container->setDefinition('omni.encryption.cipher.registry', new Definition());
+        $container->setDefinition('giftcards.encryption.cipher.registry', new Definition());
         $container->setDefinition('not_cipher', new Definition());
         $container->setDefinition('cipher1', new Definition())->addTag(
-            'omni.encryption.cipher',
+            'giftcards.encryption.cipher',
             array('alias' => 'cipher1')
         );
         $container->setDefinition('cipher2', new Definition())
             ->addTag(
-                'omni.encryption.cipher',
+                'giftcards.encryption.cipher',
                 array('alias' => 'cipher2')
             )
         ;
         $container->setDefinition('cipher3', new Definition())->addTag(
-            'omni.encryption.cipher',
+            'giftcards.encryption.cipher',
             array('alias' => 'cipher3')
         );
         $this->pass->process($container);
         $this->assertContains(
             array('setServiceId', array('cipher1', 'cipher1')),
-            $container->getDefinition('omni.encryption.cipher.registry')->getMethodCalls(),
+            $container->getDefinition('giftcards.encryption.cipher.registry')->getMethodCalls(),
             '',
             false,
             false
         );
         $this->assertContains(
             array('setServiceId', array('cipher2', 'cipher2')),
-            $container->getDefinition('omni.encryption.cipher.registry')->getMethodCalls(),
+            $container->getDefinition('giftcards.encryption.cipher.registry')->getMethodCalls(),
             '',
             false,
             false
         );
         $this->assertContains(
             array('setServiceId', array('cipher3', 'cipher3')),
-            $container->getDefinition('omni.encryption.cipher.registry')->getMethodCalls(),
+            $container->getDefinition('giftcards.encryption.cipher.registry')->getMethodCalls(),
             '',
             false,
             false
@@ -78,15 +78,15 @@ class AddCiphersPassTest extends AbstractExtendableTestCase
     public function testProcessWithRegistryAndAServiceWIthADoubleTag()
     {
         $container = new ContainerBuilder();
-        $container->setDefinition('omni.encryption.cipher.registry', new Definition());
+        $container->setDefinition('giftcards.encryption.cipher.registry', new Definition());
         $container->setDefinition('not_cipher', new Definition());
         $container->setDefinition('cipher1', new Definition())
             ->addTag(
-                'omni.encryption.cipher',
+                'giftcards.encryption.cipher',
                 array('alias' => 'cipher1')
             )
             ->addTag(
-                'omni.encryption.cipher',
+                'giftcards.encryption.cipher',
                 array('alias' => 'cipher2')
             )
         ;
@@ -99,10 +99,10 @@ class AddCiphersPassTest extends AbstractExtendableTestCase
     public function testProcessWithRegistryAndMissingAlias()
     {
         $container = new ContainerBuilder();
-        $container->setDefinition('omni.encryption.cipher.registry', new Definition());
+        $container->setDefinition('giftcards.encryption.cipher.registry', new Definition());
         $container->setDefinition('not_rotator', new Definition());
         $container->setDefinition('rotator1', new Definition())->addTag(
-            'omni.encryption.cipher'
+            'giftcards.encryption.cipher'
         );
         $this->pass->process($container);
     }

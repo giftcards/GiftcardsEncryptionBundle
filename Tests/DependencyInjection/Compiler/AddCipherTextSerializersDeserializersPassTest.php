@@ -6,15 +6,16 @@
  * Time: 6:10 PM
  */
 
-namespace Omni\EncryptionBundle\Tests\DependencyInjection\Compiler;
+namespace Giftcards\EncryptionBundle\Tests\DependencyInjection\Compiler;
 
-use Omni\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextSerializersDeserializersPass;
-use Omni\TestingBundle\TestCase\Extension\AbstractExtendableTestCase;
+use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextSerializersPass;
+use Giftcards\Encryption\Tests\AbstractTestCase;
+use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextSerializersDeserializersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-class AddCipherTextSerializersDeserializersPassTest extends AbstractExtendableTestCase
+class AddCipherTextSerializersDeserializersPassTest extends AbstractTestCase
 {
     /** @var  AddCipherTextSerializersDeserializersPass */
     protected $pass;
@@ -32,24 +33,23 @@ class AddCipherTextSerializersDeserializersPassTest extends AbstractExtendableTe
     public function testProcessWithChains()
     {
         $container = new ContainerBuilder();
-        $container->setDefinition('omni.encryption.cipher_text_serializer.chain', new Definition());
-        $container->setDefinition('omni.encryption.cipher_text_deserializer.chain', new Definition());
+        $container->setDefinition('giftcards.encryption.cipher_text_serializer.chain', new Definition());
         $container->setDefinition('not_serializer', new Definition());
         $container->setDefinition('serializer1', new Definition())->addTag(
-            'omni.encryption.cipher_text_serializer',
+            'giftcards.encryption.cipher_text_serializer',
             array('priority' => 56)
         );
         $container->setDefinition('serializer23', new Definition())
             ->addTag(
-                'omni.encryption.cipher_text_serializer',
+                'giftcards.encryption.cipher_text_serializer',
                 array('priority' => 23)
             )
             ->addTag(
-                'omni.encryption.cipher_text_serializer'
+                'giftcards.encryption.cipher_text_serializer'
             )
         ;
         $container->setDefinition('serializer4', new Definition())->addTag(
-            'omni.encryption.cipher_text_serializer'
+            'giftcards.encryption.cipher_text_serializer'
         );
         $container->setDefinition('not_deserializer', new Definition());
         $container->setDefinition('deserializer1', new Definition())->addTag(
@@ -71,28 +71,28 @@ class AddCipherTextSerializersDeserializersPassTest extends AbstractExtendableTe
         $this->pass->process($container);
         $this->assertContains(
             array('addServiceId', array('serializer1', 56)),
-            $container->getDefinition('omni.encryption.cipher_text_serializer.chain')->getMethodCalls(),
+            $container->getDefinition('giftcards.encryption.cipher_text_serializer.chain')->getMethodCalls(),
             '',
             false,
             false
         );
         $this->assertContains(
             array('addServiceId', array('serializer23', 23)),
-            $container->getDefinition('omni.encryption.cipher_text_serializer.chain')->getMethodCalls(),
+            $container->getDefinition('giftcards.encryption.cipher_text_serializer.chain')->getMethodCalls(),
             '',
             false,
             false
         );
         $this->assertContains(
             array('addServiceId', array('serializer23', 0)),
-            $container->getDefinition('omni.encryption.cipher_text_serializer.chain')->getMethodCalls(),
+            $container->getDefinition('giftcards.encryption.cipher_text_serializer.chain')->getMethodCalls(),
             '',
             false,
             false
         );
         $this->assertContains(
             array('addServiceId', array('serializer4', 0)),
-            $container->getDefinition('omni.encryption.cipher_text_serializer.chain')->getMethodCalls(),
+            $container->getDefinition('giftcards.encryption.cipher_text_serializer.chain')->getMethodCalls(),
             '',
             false,
             false

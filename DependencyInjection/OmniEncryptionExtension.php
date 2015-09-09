@@ -1,6 +1,6 @@
 <?php
 
-namespace Omni\EncryptionBundle\DependencyInjection;
+namespace Giftcards\EncryptionBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -27,48 +27,64 @@ class OmniEncryptionExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        $profileRegistry = $container->getDefinition('omni.encryption.profile.registry');
+        $profileRegistry = $container->getDefinition('giftcards.encryption.profile.registry');
         
         foreach ($config['profiles'] as $profile => $profileConfig) {
             $profileRegistry->addMethodCall('set', array($profile, new Definition(
-                'Omni\Encryption\Profile\Profile',
+                'Giftcards\Encryption\Profile\Profile',
                 array($profileConfig['cipher'], $profileConfig['key_name'])
             )));
         }
         
         $container
-            ->getDefinition('omni.encryption.encryptor')
+            ->getDefinition('giftcards.encryption.encryptor')
             ->replaceArgument(4, $config['default_profile'])
         ;
         
         if (count($config['keys']['fallbacks'])) {
-            $container->register('omni.encryption.key_source.fallback', 'Omni\Encryption\Key\FallbackSource')
+            $container->register('giftcards.encryption.key_source.fallback', 'Giftcards\Encryption\Key\FallbackSource')
                 ->setArguments(array(
                     $config['keys']['fallbacks'],
-                    new Reference((string)$container->getAlias('omni.encryption.key_source'))
+                    new Reference('giftcards.encryption.key_source')
                 ))
             ;
-            $container->setAlias('omni.encryption.key_source', 'omni.encryption.key_source.fallback');
+            $container->getDefinition('giftcards.encryption.key_source.chain')
+                ->addMethodCall('addServiceId', array('giftcards.encryption.key_source.fallback'))
+            ;
         }
         
         if (count($config['keys']['map'])) {
-            $container->register('omni.encryption.key_source.mapping', 'Omni\Encryption\Key\MappingSource')
+            $container->register('giftcards.encryption.key_source.mapping', 'Giftcards\Encryption\Key\MappingSource')
                 ->setArguments(array(
                     $config['keys']['map'],
-                    new Reference((string)$container->getAlias('omni.encryption.key_source'))
+                    new Reference('giftcards.encryption.key_source')
                 ))
             ;
-            $container->setAlias('omni.encryption.key_source', 'omni.encryption.key_source.mapping');
+            $container->getDefinition('giftcards.encryption.key_source.chain')
+                ->addMethodCall('addServiceId', array('giftcards.encryption.key_source.mapping'))
+            ;
+        }
+        
+        if (count($config['keys']['combine'])) {
+            $container->register('giftcards.encryption.key_source.combining', 'Giftcards\Encryption\Key\CombiningSource')
+                ->setArguments(array(
+                    $config['keys']['map'],
+                    new Reference('giftcards.encryption.key_source')
+                ))
+            ;
+            $container->getDefinition('giftcards.encryption.key_source.chain')
+                ->addMethodCall('addServiceId', array('giftcards.encryption.key_source.combining'))
+            ;
         }
         
         if ($config['keys']['cache']) {
-            $container->register('omni.encryption.key_source.caching', 'Omni\Encryption\Key\CachingSource')
+            $container->register('giftcards.encryption.key_source.caching', 'Giftcards\Encryption\Key\CachingSource')
                 ->setArguments(array(
-                    new Reference((string)$container->getAlias('omni.encryption.key_source')),
+                    new Reference((string)$container->getAlias('giftcards.encryption.key_source')),
                     new Definition('Doctrine\Common\Cache\ArrayCache')
                 ))
             ;
-            $container->setAlias('omni.encryption.key_source', 'omni.encryption.key_source.caching');
+            $container->setAlias('giftcards.encryption.key_source', 'giftcards.encryption.key_source.caching');
         }
     }
 }

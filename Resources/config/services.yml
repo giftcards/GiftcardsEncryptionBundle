@@ -1,66 +1,57 @@
 services: 
 
-    omni.encryption.key_source:
-        alias: omni.encryption.key_source.chain
+    giftcards.encryption.key_source:
+        alias: giftcards.encryption.key_source.chain
         
-    omni.encryption.cipher_text_serializer:
-        alias: omni.encryption.cipher_text_serializer.chain
+    giftcards.encryption.cipher_text_serializer_deserializer:
+        alias: giftcards.encryption.cipher_text_serializer_deserializer.chain
         
-    omni.encryption.cipher_text_deserializer:
-        alias: omni.encryption.cipher_text_deserializer.chain
-        
-    omni.encryption.cipher_text_rotator.registry:
-        class: Omni\Encryption\CipherText\Rotator\ContainerAwareRotatorRegistry
+    giftcards.encryption.cipher_text_rotator.registry:
+        class: Giftcards\Encryption\CipherText\Rotator\ContainerAwareRotatorRegistry
         arguments:
             - @service_container
         
-    omni.encryption.cipher.registry:
-        class: Omni\Encryption\Cipher\ContainerAwareCipherRegistry
+    giftcards.encryption.cipher.registry:
+        class: Giftcards\Encryption\Cipher\ContainerAwareCipherRegistry
         arguments:
             - @service_container
         
-    omni.encryption.profile.registry:
-        class: Omni\Encryption\Profile\ProfileRegistry
+    giftcards.encryption.profile.registry:
+        class: Giftcards\Encryption\Profile\ProfileRegistry
         
-    omni.encryption.key_source.chain:
-        class: Omni\Encryption\Key\ContainerAwareChainSource
+    giftcards.encryption.key_source.chain:
+        class: Giftcards\Encryption\Key\ContainerAwareChainSource
         arguments:
             - @service_container
         
-    omni.encryption.cipher.mysql_aes:
-        class: Omni\Encryption\Cipher\MysqlAes
+    giftcards.encryption.cipher.mysql_aes:
+        class: Giftcards\Encryption\Cipher\MysqlAes
         tags:
-            - { name: omni.encryption.cipher, alias: mysql_aes }
+            - { name: giftcards.encryption.cipher, alias: mysql_aes }
         
-    omni.encryption.cipher.no_op:
-        class: Omni\Encryption\Cipher\NoOp
+    giftcards.encryption.cipher.no_op:
+        class: Giftcards\Encryption\Cipher\NoOp
         tags:
-            - { name: omni.encryption.cipher, alias: no_op }
+            - { name: giftcards.encryption.cipher, alias: no_op }
     
-    omni.encryption.cipher_text_serializer.chain:
-        class: Omni\Encryption\CipherText\Serializer\ContainerAwareChainSerializer
-        arguments:
-            - @service_container
-    
-    omni.encryption.cipher_text_deserializer.chain:
-        class: Omni\Encryption\CipherText\Serializer\ContainerAwareChainDeserializer
+    giftcards.encryption.cipher_text_serializer_deserializer.chain:
+        class: Giftcards\Encryption\CipherText\Serializer\ContainerAwareChainSerializerDeserializer
         arguments:
             - @service_container
      
-    omni.encryption.encryptor:
-        class: Omni\Encryption\Encryptor
+    giftcards.encryption.encryptor:
+        class: Giftcards\Encryption\Encryptor
         arguments:
-            - @omni.encryption.cipher.registry
-            - @omni.encryption.key_source
-            - @omni.encryption.profile.registry
-            - @omni.encryption.cipher_text_serializer
-            - @omni.encryption.cipher_text_deserializer
+            - @giftcards.encryption.cipher.registry
+            - @giftcards.encryption.key_source
+            - @giftcards.encryption.profile.registry
+            - @giftcards.encryption.cipher_text_serializer_deserializer
             - default_profile
         
-    omni.encryption.command.rotate_encryption_profile:
-        class: Omni\Encryption\Command\RotateEncryptionProfileCommand
+    giftcards.encryption.command.rotate_encryption_profile:
+        class: Giftcards\Encryption\Command\RotateEncryptionProfileCommand
         arguments:
-            - @omni.encryption.cipher_text_rotator.registry
-            - @omni.encryption.encryptor
+            - @giftcards.encryption.cipher_text_rotator.registry
+            - @giftcards.encryption.encryptor
         tags:
             - { name: console.command }

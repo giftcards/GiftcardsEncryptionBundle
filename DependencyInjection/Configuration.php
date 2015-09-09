@@ -1,7 +1,8 @@
 <?php
 
-namespace Omni\EncryptionBundle\DependencyInjection;
+namespace Giftcards\EncryptionBundle\DependencyInjection;
 
+use Giftcards\Encryption\Key\CombiningSource;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -38,6 +39,16 @@ class Configuration implements ConfigurationInterface
                             ->useAttributeAsKey('name')
                             ->prototype('array')
                                 ->prototype('scalar')->cannotBeEmpty()->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('combine')
+                            ->defaultValue(array())
+                            ->useAttributeAsKey('name')
+                            ->prototype('array')
+                                ->children()
+                                    ->scalarNode(CombiningSource::LEFT)->isRequired()->cannotBeEmpty()->end()
+                                    ->scalarNode(CombiningSource::RIGHT)->isRequired()->cannotBeEmpty()->end()
+                                ->end()
                             ->end()
                         ->end()
                     ->end()

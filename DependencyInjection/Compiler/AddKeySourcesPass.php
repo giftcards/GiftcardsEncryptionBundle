@@ -6,7 +6,7 @@
  * Time: 7:58 PM
  */
 
-namespace Omni\EncryptionBundle\DependencyInjection\Compiler;
+namespace Giftcards\EncryptionBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -16,20 +16,20 @@ class AddKeySourcesPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('omni.encryption.key_source.chain')) {
+        if (!$container->hasDefinition('giftcards.encryption.key_source.chain')) {
             return;
         }
         
-        $chain = $container->getDefinition('omni.encryption.key_source.chain');
+        $chain = $container->getDefinition('giftcards.encryption.key_source.chain');
 
-        foreach ($container->findTaggedServiceIds('omni.encryption.key_source') as $id => $tags) {
+        foreach ($container->findTaggedServiceIds('giftcards.encryption.key_source') as $id => $tags) {
             foreach ($tags as $tag) {
                 $serviceId = $id;
                 if (!empty($tag['prefix'])) {
                     $internalId = $id;
                     $serviceId = sprintf('%s.prefixed.%s', $id, $tag['prefix']);
                     $container
-                        ->register($serviceId, 'Omni\Encryption\Key\PrefixKeyNameSource')
+                        ->register($serviceId, 'Giftcards\Encryption\Key\PrefixKeyNameSource')
                         ->setArguments(array(
                             $tag['prefix'],
                             new Reference($internalId)

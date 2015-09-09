@@ -6,7 +6,7 @@
  * Time: 7:58 PM
  */
 
-namespace Omni\EncryptionBundle\DependencyInjection\Compiler;
+namespace Giftcards\EncryptionBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -16,25 +16,22 @@ class AddCipherTextSerializersDeserializersPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if ($container->hasDefinition('omni.encryption.cipher_text_serializer.chain')) {
-            $chain = $container->getDefinition('omni.encryption.cipher_text_serializer.chain');
+        if (!$container->hasDefinition('omni.encryption.cipher_text_serializer_deserializer.chain')) {
+            return;
+        }
+        
+        $chain = $container->getDefinition('omni.encryption.cipher_text_serializer_deserializer.chain');
 
-            foreach ($container->findTaggedServiceIds('omni.encryption.cipher_text_serializer') as $id => $tags) {
-                foreach ($tags as $tag) {
-                    $chain->addMethodCall('addServiceId', array($id, isset($tag['priority']) ? $tag['priority'] : 0));
-                }
+        foreach ($container->findTaggedServiceIds('omni.encryption.cipher_text_serializer') as $id => $tags) {
+            foreach ($tags as $tag) {
+                $chain->addMethodCall('addSerializerServiceId', array($id, isset($tag['priority']) ? $tag['priority'] : 0));
             }
         }
 
-        if ($container->hasDefinition('omni.encryption.cipher_text_deserializer.chain')) {
-            $chain = $container->getDefinition('omni.encryption.cipher_text_deserializer.chain');
-
-            foreach ($container->findTaggedServiceIds('omni.encryption.cipher_text_deserializer') as $id => $tags) {
-                foreach ($tags as $tag) {
-                    $chain->addMethodCall('addServiceId', array($id, isset($tag['priority']) ? $tag['priority'] : 0));
-                }
+        foreach ($container->findTaggedServiceIds('omni.encryption.cipher_text_deserializer') as $id => $tags) {
+            foreach ($tags as $tag) {
+                $chain->addMethodCall('addDeserializerServiceId', array($id, isset($tag['priority']) ? $tag['priority'] : 0));
             }
         }
-
     }
 }

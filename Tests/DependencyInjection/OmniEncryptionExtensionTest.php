@@ -6,16 +6,16 @@
  * Time: 6:46 PM
  */
 
-namespace Omni\EncryptionBundle\Tests\DependencyInjection;
+namespace Giftcards\EncryptionBundle\Tests\DependencyInjection;
 
-use Omni\EncryptionBundle\DependencyInjection\OmniEncryptionExtension;
-use Omni\TestingBundle\TestCase\Extension\AbstractExtendableTestCase;
+use Giftcards\EncryptionBundle\DependencyInjection\OmniEncryptionExtension;
+use Giftcards\Encryption\Tests\AbstractTestCase;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-class OmniEncryptionExtensionTest extends AbstractExtendableTestCase
+class OmniEncryptionExtensionTest extends AbstractTestCase
 {
     /** @var  OmniEncryptionExtension */
     protected $extension;
@@ -36,7 +36,7 @@ class OmniEncryptionExtensionTest extends AbstractExtendableTestCase
             false,
             false
         );
-        $this->assertNull($container->getDefinition('omni.encryption.encryptor')->getArgument(4));
+        $this->assertNull($container->getDefinition('giftcards.encryption.encryptor')->getArgument(4));
     }
 
     public function testLoadWhereDefaultProfileIsSet()
@@ -52,7 +52,7 @@ class OmniEncryptionExtensionTest extends AbstractExtendableTestCase
         );
         $this->assertEquals(
             'default',
-            $container->getDefinition('omni.encryption.encryptor')->getArgument(4)
+            $container->getDefinition('giftcards.encryption.encryptor')->getArgument(4)
         );
     }
 
@@ -73,20 +73,20 @@ class OmniEncryptionExtensionTest extends AbstractExtendableTestCase
         )), $container);
         $this->assertContains(
             array('set', array('foo', new Definition(
-                'Omni\Encryption\Profile\Profile',
+                'Giftcards\Encryption\Profile\Profile',
                 array('cipher1', 'key1')
             ))),
-            $container->getDefinition('omni.encryption.profile.registry')->getMethodCalls(),
+            $container->getDefinition('giftcards.encryption.profile.registry')->getMethodCalls(),
             '',
             false,
             false
         );
         $this->assertContains(
             array('set', array('bar', new Definition(
-                'Omni\Encryption\Profile\Profile',
+                'Giftcards\Encryption\Profile\Profile',
                 array('cipher2', 'key2')
             ))),
-            $container->getDefinition('omni.encryption.profile.registry')->getMethodCalls(),
+            $container->getDefinition('giftcards.encryption.profile.registry')->getMethodCalls(),
             '',
             false,
             false
@@ -112,10 +112,10 @@ class OmniEncryptionExtensionTest extends AbstractExtendableTestCase
                 'fallbacks' => $fallbacks,
             )
         )), $container);
-        $this->assertEquals('omni.encryption.key_source.fallback', $container->getAlias('omni.encryption.key_source'));
+        $this->assertEquals('giftcards.encryption.key_source.fallback', $container->getAlias('giftcards.encryption.key_source'));
         $this->assertEquals(
-            new Definition('Omni\Encryption\Key\FallbackSource', array($fallbacks, new Reference('omni.encryption.key_source.chain'))),
-            $container->getDefinition('omni.encryption.key_source.fallback')
+            new Definition('Giftcards\Encryption\Key\FallbackSource', array($fallbacks, new Reference('giftcards.encryption.key_source.chain'))),
+            $container->getDefinition('giftcards.encryption.key_source.fallback')
         );
     }
 
@@ -131,10 +131,10 @@ class OmniEncryptionExtensionTest extends AbstractExtendableTestCase
                 'map' => $map,
             )
         )), $container);
-        $this->assertEquals('omni.encryption.key_source.mapping', $container->getAlias('omni.encryption.key_source'));
+        $this->assertEquals('giftcards.encryption.key_source.mapping', $container->getAlias('giftcards.encryption.key_source'));
         $this->assertEquals(
-            new Definition('Omni\Encryption\Key\MappingSource', array($map, new Reference('omni.encryption.key_source.chain'))),
-            $container->getDefinition('omni.encryption.key_source.mapping')
+            new Definition('Giftcards\Encryption\Key\MappingSource', array($map, new Reference('giftcards.encryption.key_source.chain'))),
+            $container->getDefinition('giftcards.encryption.key_source.mapping')
         );
     }
 
@@ -150,13 +150,13 @@ class OmniEncryptionExtensionTest extends AbstractExtendableTestCase
                 'cache' => true,
             )
         )), $container);
-        $this->assertEquals('omni.encryption.key_source.caching', $container->getAlias('omni.encryption.key_source'));
+        $this->assertEquals('giftcards.encryption.key_source.caching', $container->getAlias('giftcards.encryption.key_source'));
         $this->assertEquals(
-            new Definition('Omni\Encryption\Key\CachingSource', array(
-                new Reference('omni.encryption.key_source.chain'),
+            new Definition('Giftcards\Encryption\Key\CachingSource', array(
+                new Reference('giftcards.encryption.key_source.chain'),
                 new Definition('Doctrine\Common\Cache\ArrayCache')
             )),
-            $container->getDefinition('omni.encryption.key_source.caching')
+            $container->getDefinition('giftcards.encryption.key_source.caching')
         );
     }
 }
