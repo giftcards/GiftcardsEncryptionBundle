@@ -1,5 +1,6 @@
 {
   "name": "giftcards/encryption-bundle",
+  "license": "MIT",
   "require": {
     "symfony/symfony": "~2.3",
     "giftcards/encryption": "dev-master"
