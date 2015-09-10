@@ -45,6 +45,11 @@ class GiftcardsEncryptionBundleTest extends AbstractTestCase
                 ->with('Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddKeySourcesPass')
                 ->andReturn(\Mockery::self())
                 ->getMock()
+                ->shouldReceive('addCompilerPass')
+                ->once()
+                ->with('Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddBuildersPass')
+                ->andReturn(\Mockery::self())
+                ->getMock()
         );
     }
 }

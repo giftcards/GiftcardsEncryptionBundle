@@ -5,6 +5,7 @@ namespace Giftcards\EncryptionBundle\DependencyInjection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
@@ -26,6 +27,7 @@ class GiftcardsEncryptionExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+        $loader->load('factories.yml');
 
         $profileRegistry = $container->getDefinition('giftcards.encryption.profile.registry');
         
@@ -85,6 +87,70 @@ class GiftcardsEncryptionExtension extends Extension
                 ))
             ;
             $container->setAlias('giftcards.encryption.key_source', 'giftcards.encryption.key_source.caching');
+        }
+
+        foreach ($config['keys']['sources'] as $name => $sourceConfig) {
+            $serviceId = sprintf('giftcards.encryption.key_source.%s', $name);
+            $container
+                ->setDefinition(
+                    $serviceId,
+                    new DefinitionDecorator('giftcards.encryption.abstract_key_source')
+                )
+                ->replaceArgument(0, $sourceConfig['type'])
+                ->replaceArgument(1, $sourceConfig['options'])
+                ->addTag(
+                    'giftcards.encryption.key_source',
+                    array('prefix' => $sourceConfig['prefix'])
+                )
+            ;
+        }
+
+        foreach ($config['cipher_texts']['rotators'] as $name => $rotatorConfig) {
+            $serviceId = sprintf('giftcards.encryption.cipher_text_rotator.%s', $name);
+            $container
+                ->setDefinition(
+                    $serviceId,
+                    new DefinitionDecorator('giftcards.encryption.abstract_cipher_text_rotator')
+                )
+                ->replaceArgument(0, $rotatorConfig['type'])
+                ->replaceArgument(1, $rotatorConfig['options'])
+                ->addTag(
+                    'giftcards.encryption.cipher_text_rotator',
+                    array('alias' => $name)
+                )
+            ;
+        }
+
+        foreach ($config['cipher_texts']['serializers'] as $name => $serializerConfig) {
+            $serviceId = sprintf('giftcards.encryption.cipher_text_serializer.%s', $name);
+            $container
+                ->setDefinition(
+                    $serviceId,
+                    new DefinitionDecorator('giftcards.encryption.abstract_cipher_text_serializer')
+                )
+                ->replaceArgument(0, $serializerConfig['type'])
+                ->replaceArgument(1, $serializerConfig['options'])
+                ->addTag(
+                    'giftcards.encryption.cipher_text_serializer',
+                    array('priority' => $serializerConfig['priority'])
+                )
+            ;
+        }
+
+        foreach ($config['cipher_texts']['deserializers'] as $name => $deserializerConfig) {
+            $serviceId = sprintf('giftcards.encryption.cipher_text_deserializer.%s', $name);
+            $container
+                ->setDefinition(
+                    $serviceId,
+                    new DefinitionDecorator('giftcards.encryption.abstract_cipher_text_deserializer')
+                )
+                ->replaceArgument(0, $deserializerConfig['type'])
+                ->replaceArgument(1, $deserializerConfig['options'])
+                ->addTag(
+                    'giftcards.encryption.cipher_text_deserializer',
+                    array('priority' => $deserializerConfig['priority'])
+                )
+            ;
         }
     }
 }

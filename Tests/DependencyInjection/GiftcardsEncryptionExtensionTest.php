@@ -14,6 +14,7 @@ use Giftcards\Encryption\Tests\AbstractTestCase;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 
 class GiftcardsEncryptionExtensionTest extends AbstractTestCase
@@ -203,5 +204,125 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
             )),
             $container->getDefinition('giftcards.encryption.key_source.caching')
         );
+    }
+
+    public function testLoadWhereSourcesAreConfigured()
+    {
+        $container = new ContainerBuilder();
+        $type = $this->getFaker()->unique()->word;
+        $options = array(
+            $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
+            $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
+            $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
+        );
+        $prefix = $this->getFaker()->unique()->word;
+        $this->extension->load(array(array(
+            'keys' => array(
+                'sources' => array(
+                    array(
+                        'type' => $type,
+                        'options' => $options,
+                        'prefix' => $prefix
+                    )
+                ),
+            )
+        )), $container);
+        $definition = new DefinitionDecorator('giftcards.encryption.abstract_key_source');
+        $definition
+            ->replaceArgument(0, $type)
+            ->replaceArgument(1, $options)
+            ->addTag('giftcards.encryption.key_source', array('prefix' => $prefix))
+        ;
+        $this->assertEquals($definition, $container->getDefinition('giftcards.encryption.key_source.0'));
+    }
+
+    public function testLoadWhereCipherTextRotatorsAreConfigured()
+    {
+        $container = new ContainerBuilder();
+        $type = $this->getFaker()->unique()->word;
+        $options = array(
+            $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
+            $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
+            $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
+        );
+        $prefix = $this->getFaker()->unique()->word;
+        $name = $this->getFaker()->unique()->word;
+        $this->extension->load(array(array(
+            'cipher_texts' => array(
+                'rotators' => array(
+                    $name => array(
+                        'type' => $type,
+                        'options' => $options,
+                    )
+                ),
+            )
+        )), $container);
+        $definition = new DefinitionDecorator('giftcards.encryption.abstract_cipher_text_rotator');
+        $definition
+            ->replaceArgument(0, $type)
+            ->replaceArgument(1, $options)
+            ->addTag('giftcards.encryption.cipher_text_rotator', array('alias' => $name))
+        ;
+        $this->assertEquals($definition, $container->getDefinition('giftcards.encryption.cipher_text_rotator.'.$name));
+    }
+    
+    public function testLoadWhereCipherTextSerializersAreConfigured()
+    {
+        $container = new ContainerBuilder();
+        $type = $this->getFaker()->unique()->word;
+        $options = array(
+            $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
+            $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
+            $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
+        );
+        $priority = $this->getFaker()->randomNumber();
+        $this->extension->load(array(array(
+            'cipher_texts' => array(
+                'serializers' => array(
+                    array(
+                        'type' => $type,
+                        'options' => $options,
+                        'priority' => $priority
+                    )
+                ),
+            )
+        )), $container);
+        $definition = new DefinitionDecorator('giftcards.encryption.abstract_cipher_text_serializer');
+        $definition
+            ->replaceArgument(0, $type)
+            ->replaceArgument(1, $options)
+            ->addTag('giftcards.encryption.cipher_text_serializer', array('priority' => $priority))
+        ;
+        $this->assertEquals($definition, $container->getDefinition('giftcards.encryption.cipher_text_serializer.0'));
+    }
+    
+    public function testLoadWhereCipherTextDeserializersAreConfigured()
+    {
+        $container = new ContainerBuilder();
+        $type = $this->getFaker()->unique()->word;
+        $options = array(
+            $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
+            $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
+            $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
+        );
+        $priority = $this->getFaker()->randomNumber();
+        $this->extension->load(array(array(
+            'cipher_texts' => array(
+                'deserializers' => array(
+                    array(
+                        'type' => $type,
+                        'options' => $options,
+                        'priority' => $priority
+                    )
+                ),
+            )
+        )), $container);
+        $definition = new DefinitionDecorator('giftcards.encryption.abstract_cipher_text_deserializer');
+        $definition
+            ->replaceArgument(0, $type)
+            ->replaceArgument(1, $options)
+            ->addTag('giftcards.encryption.cipher_text_deserializer', array('priority' => $priority))
+        ;
+        $this->assertEquals($definition, $container->getDefinition('giftcards.encryption.cipher_text_deserializer.0'));
     }
 }

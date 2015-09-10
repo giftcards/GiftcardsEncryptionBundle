@@ -2,6 +2,7 @@
 
 namespace Giftcards\EncryptionBundle;
 
+use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddBuildersPass;
 use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextRotatorsPass;
 use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCiphersPass;
 use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextSerializersDeserializersPass;
@@ -18,6 +19,7 @@ class GiftcardsEncryptionBundle extends Bundle
             ->addCompilerPass(new AddCiphersPass())
             ->addCompilerPass(new AddKeySourcesPass())
             ->addCompilerPass(new AddCipherTextSerializersDeserializersPass())
+            ->addCompilerPass(new AddBuildersPass())
         ;
     }
 }
