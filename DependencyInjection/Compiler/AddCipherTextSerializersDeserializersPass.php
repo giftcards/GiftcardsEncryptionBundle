@@ -16,19 +16,19 @@ class AddCipherTextSerializersDeserializersPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('omni.encryption.cipher_text_serializer_deserializer.chain')) {
+        if (!$container->hasDefinition('giftcards.encryption.cipher_text_serializer_deserializer.chain')) {
             return;
         }
         
-        $chain = $container->getDefinition('omni.encryption.cipher_text_serializer_deserializer.chain');
+        $chain = $container->getDefinition('giftcards.encryption.cipher_text_serializer_deserializer.chain');
 
-        foreach ($container->findTaggedServiceIds('omni.encryption.cipher_text_serializer') as $id => $tags) {
+        foreach ($container->findTaggedServiceIds('giftcards.encryption.cipher_text_serializer') as $id => $tags) {
             foreach ($tags as $tag) {
                 $chain->addMethodCall('addSerializerServiceId', array($id, isset($tag['priority']) ? $tag['priority'] : 0));
             }
         }
 
-        foreach ($container->findTaggedServiceIds('omni.encryption.cipher_text_deserializer') as $id => $tags) {
+        foreach ($container->findTaggedServiceIds('giftcards.encryption.cipher_text_deserializer') as $id => $tags) {
             foreach ($tags as $tag) {
                 $chain->addMethodCall('addDeserializerServiceId', array($id, isset($tag['priority']) ? $tag['priority'] : 0));
             }

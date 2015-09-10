@@ -33,7 +33,7 @@ class AddCipherTextSerializersDeserializersPassTest extends AbstractTestCase
     public function testProcessWithChains()
     {
         $container = new ContainerBuilder();
-        $container->setDefinition('giftcards.encryption.cipher_text_serializer.chain', new Definition());
+        $container->setDefinition('giftcards.encryption.cipher_text_serializer_deserializer.chain', new Definition());
         $container->setDefinition('not_serializer', new Definition());
         $container->setDefinition('serializer1', new Definition())->addTag(
             'giftcards.encryption.cipher_text_serializer',
@@ -53,74 +53,74 @@ class AddCipherTextSerializersDeserializersPassTest extends AbstractTestCase
         );
         $container->setDefinition('not_deserializer', new Definition());
         $container->setDefinition('deserializer1', new Definition())->addTag(
-            'omni.encryption.cipher_text_deserializer',
+            'giftcards.encryption.cipher_text_deserializer',
             array('priority' => 56)
         );
         $container->setDefinition('deserializer23', new Definition())
             ->addTag(
-                'omni.encryption.cipher_text_deserializer',
+                'giftcards.encryption.cipher_text_deserializer',
                 array('priority' => 23)
             )
             ->addTag(
-                'omni.encryption.cipher_text_deserializer'
+                'giftcards.encryption.cipher_text_deserializer'
             )
         ;
         $container->setDefinition('deserializer4', new Definition())->addTag(
-            'omni.encryption.cipher_text_deserializer'
+            'giftcards.encryption.cipher_text_deserializer'
         );
         $this->pass->process($container);
         $this->assertContains(
-            array('addServiceId', array('serializer1', 56)),
-            $container->getDefinition('giftcards.encryption.cipher_text_serializer.chain')->getMethodCalls(),
+            array('addSerializerServiceId', array('serializer1', 56)),
+            $container->getDefinition('giftcards.encryption.cipher_text_serializer_deserializer.chain')->getMethodCalls(),
             '',
             false,
             false
         );
         $this->assertContains(
-            array('addServiceId', array('serializer23', 23)),
-            $container->getDefinition('giftcards.encryption.cipher_text_serializer.chain')->getMethodCalls(),
+            array('addSerializerServiceId', array('serializer23', 23)),
+            $container->getDefinition('giftcards.encryption.cipher_text_serializer_deserializer.chain')->getMethodCalls(),
             '',
             false,
             false
         );
         $this->assertContains(
-            array('addServiceId', array('serializer23', 0)),
-            $container->getDefinition('giftcards.encryption.cipher_text_serializer.chain')->getMethodCalls(),
+            array('addSerializerServiceId', array('serializer23', 0)),
+            $container->getDefinition('giftcards.encryption.cipher_text_serializer_deserializer.chain')->getMethodCalls(),
             '',
             false,
             false
         );
         $this->assertContains(
-            array('addServiceId', array('serializer4', 0)),
-            $container->getDefinition('giftcards.encryption.cipher_text_serializer.chain')->getMethodCalls(),
+            array('addSerializerServiceId', array('serializer4', 0)),
+            $container->getDefinition('giftcards.encryption.cipher_text_serializer_deserializer.chain')->getMethodCalls(),
             '',
             false,
             false
         );
         $this->assertContains(
-            array('addServiceId', array('deserializer1', 56)),
-            $container->getDefinition('omni.encryption.cipher_text_deserializer.chain')->getMethodCalls(),
+            array('addDeserializerServiceId', array('deserializer1', 56)),
+            $container->getDefinition('giftcards.encryption.cipher_text_serializer_deserializer.chain')->getMethodCalls(),
             '',
             false,
             false
         );
         $this->assertContains(
-            array('addServiceId', array('deserializer23', 23)),
-            $container->getDefinition('omni.encryption.cipher_text_deserializer.chain')->getMethodCalls(),
+            array('addDeserializerServiceId', array('deserializer23', 23)),
+            $container->getDefinition('giftcards.encryption.cipher_text_serializer_deserializer.chain')->getMethodCalls(),
             '',
             false,
             false
         );
         $this->assertContains(
-            array('addServiceId', array('deserializer23', 0)),
-            $container->getDefinition('omni.encryption.cipher_text_deserializer.chain')->getMethodCalls(),
+            array('addDeserializerServiceId', array('deserializer23', 0)),
+            $container->getDefinition('giftcards.encryption.cipher_text_serializer_deserializer.chain')->getMethodCalls(),
             '',
             false,
             false
         );
         $this->assertContains(
-            array('addServiceId', array('deserializer4', 0)),
-            $container->getDefinition('omni.encryption.cipher_text_deserializer.chain')->getMethodCalls(),
+            array('addDeserializerServiceId', array('deserializer4', 0)),
+            $container->getDefinition('giftcards.encryption.cipher_text_serializer_deserializer.chain')->getMethodCalls(),
             '',
             false,
             false

@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class OmniEncryptionExtension extends Extension
+class GiftcardsEncryptionExtension extends Extension
 {
     /**
      * {@inheritDoc}
@@ -68,7 +68,7 @@ class OmniEncryptionExtension extends Extension
         if (count($config['keys']['combine'])) {
             $container->register('giftcards.encryption.key_source.combining', 'Giftcards\Encryption\Key\CombiningSource')
                 ->setArguments(array(
-                    $config['keys']['map'],
+                    $config['keys']['combine'],
                     new Reference('giftcards.encryption.key_source')
                 ))
             ;

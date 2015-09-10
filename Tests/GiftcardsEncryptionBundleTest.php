@@ -11,7 +11,7 @@ namespace Giftcards\EncryptionBundle\Tests;
 use Giftcards\Encryption\Tests\AbstractTestCase;
 use Giftcards\EncryptionBundle\GiftcardsEncryptionBundle;
 
-class OmniEncryptionBundleTest extends AbstractTestCase
+class GiftcardsEncryptionBundleTest extends AbstractTestCase
 {
     /** @var  GiftcardsEncryptionBundle */
     protected $bundle;
@@ -37,7 +37,7 @@ class OmniEncryptionBundleTest extends AbstractTestCase
                 ->getMock()
                 ->shouldReceive('addCompilerPass')
                 ->once()
-                ->with('Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextSerializersPass')
+                ->with('Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextSerializersDeserializersPass')
                 ->andReturn(\Mockery::self())
                 ->getMock()
                 ->shouldReceive('addCompilerPass')

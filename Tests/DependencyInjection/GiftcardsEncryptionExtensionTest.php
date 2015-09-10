@@ -8,21 +8,22 @@
 
 namespace Giftcards\EncryptionBundle\Tests\DependencyInjection;
 
-use Giftcards\EncryptionBundle\DependencyInjection\OmniEncryptionExtension;
+use Giftcards\Encryption\Key\CombiningSource;
+use Giftcards\EncryptionBundle\DependencyInjection\GiftcardsEncryptionExtension;
 use Giftcards\Encryption\Tests\AbstractTestCase;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-class OmniEncryptionExtensionTest extends AbstractTestCase
+class GiftcardsEncryptionExtensionTest extends AbstractTestCase
 {
-    /** @var  OmniEncryptionExtension */
+    /** @var  GiftcardsEncryptionExtension */
     protected $extension;
 
     public function setUp()
     {
-        $this->extension = new OmniEncryptionExtension();
+        $this->extension = new GiftcardsEncryptionExtension();
     }
 
     public function testLoad()
@@ -112,9 +113,15 @@ class OmniEncryptionExtensionTest extends AbstractTestCase
                 'fallbacks' => $fallbacks,
             )
         )), $container);
-        $this->assertEquals('giftcards.encryption.key_source.fallback', $container->getAlias('giftcards.encryption.key_source'));
+        $this->assertContains(
+            array('addServiceId', array('giftcards.encryption.key_source.fallback')),
+            $container->getDefinition('giftcards.encryption.key_source.chain')->getMethodCalls(),
+            '',
+            false,
+            false
+        );
         $this->assertEquals(
-            new Definition('Giftcards\Encryption\Key\FallbackSource', array($fallbacks, new Reference('giftcards.encryption.key_source.chain'))),
+            new Definition('Giftcards\Encryption\Key\FallbackSource', array($fallbacks, new Reference('giftcards.encryption.key_source'))),
             $container->getDefinition('giftcards.encryption.key_source.fallback')
         );
     }
@@ -131,20 +138,58 @@ class OmniEncryptionExtensionTest extends AbstractTestCase
                 'map' => $map,
             )
         )), $container);
-        $this->assertEquals('giftcards.encryption.key_source.mapping', $container->getAlias('giftcards.encryption.key_source'));
+        $this->assertContains(
+            array('addServiceId', array('giftcards.encryption.key_source.mapping')),
+            $container->getDefinition('giftcards.encryption.key_source.chain')->getMethodCalls(),
+            '',
+            false,
+            false
+        );
         $this->assertEquals(
-            new Definition('Giftcards\Encryption\Key\MappingSource', array($map, new Reference('giftcards.encryption.key_source.chain'))),
+            new Definition('Giftcards\Encryption\Key\MappingSource', array($map, new Reference('giftcards.encryption.key_source'))),
             $container->getDefinition('giftcards.encryption.key_source.mapping')
+        );
+    }
+
+    public function testLoadWhereCombinedKeysAreConfigured()
+    {
+        $container = new ContainerBuilder();
+        $combined = array(
+            $this->getFaker()->unique()->word => array(
+                CombiningSource::LEFT => $this->getFaker()->unique()->word,
+                CombiningSource::RIGHT => $this->getFaker()->unique()->word,
+            ),
+            $this->getFaker()->unique()->word => array(
+                CombiningSource::LEFT => $this->getFaker()->unique()->word,
+                CombiningSource::RIGHT => $this->getFaker()->unique()->word,
+            ),
+            $this->getFaker()->unique()->word => array(
+                CombiningSource::LEFT => $this->getFaker()->unique()->word,
+                CombiningSource::RIGHT => $this->getFaker()->unique()->word,
+            ),
+        );
+        $this->extension->load(array(array(
+            'keys' => array(
+                'combine' => $combined,
+            )
+        )), $container);
+        $this->assertContains(
+            array('addServiceId', array('giftcards.encryption.key_source.combining')),
+            $container->getDefinition('giftcards.encryption.key_source.chain')->getMethodCalls(),
+            '',
+            false,
+            false
+        );
+
+        $this->assertEquals(
+            new Definition('Giftcards\Encryption\Key\CombiningSource', array($combined, new Reference('giftcards.encryption.key_source'))),
+            $container->getDefinition('giftcards.encryption.key_source.combining')
         );
     }
 
     public function testLoadWhereCacheIsTrue()
     {
         $container = new ContainerBuilder();
-        $map = array(
-            'key1' => 'key3',
-            'key2' => 'key5',
-        );
         $this->extension->load(array(array(
             'keys' => array(
                 'cache' => true,
