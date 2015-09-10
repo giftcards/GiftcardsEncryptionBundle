@@ -38,6 +38,13 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
             false,
             false
         );
+        $this->assertContains(
+            new FileResource(__DIR__.'/../../Resources/config/factories.yml'),
+            $container->getResources(),
+            '',
+            false,
+            false
+        );
         $this->assertNull($container->getDefinition('giftcards.encryption.encryptor')->getArgument(4));
     }
 

@@ -15,17 +15,17 @@ use Symfony\Component\DependencyInjection\Reference;
 class AddBuildersPass implements CompilerPassInterface
 {
     protected $registries = array(
+        'giftcards.encryption.key_source.factory.registry' => 'giftcards.encryption.key_source.builder',
         'giftcards.encryption.cipher_text_rotator.factory.registry' => 'giftcards.encryption.cipher_text_rotator.builder',
         'giftcards.encryption.cipher_text_serializer.factory.registry' => 'giftcards.encryption.cipher_text_serializer.builder',
         'giftcards.encryption.cipher_text_deserializer.factory.registry' => 'giftcards.encryption.cipher_text_deserializer.builder',
-        'giftcards.encryption.key_source.factory.registry' => 'giftcards.encryption.key_source.builder',
     );
     
     public function process(ContainerBuilder $container)
     {
         foreach ($this->registries as $name => $tagName) {
             if (!$container->hasDefinition($name)) {
-                return;
+                continue;
             }
             
             $registry = $container->getDefinition($name);
@@ -40,6 +40,7 @@ class AddBuildersPass implements CompilerPassInterface
                         $id
                     ));
                 }
+                
                 $registry->addMethodCall('setServiceId', array($tag['alias'], $id));
             }
         }
