@@ -52,7 +52,17 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
             false,
             false
         );
+        $this->assertContains(
+            new FileResource(__DIR__.'/../../Resources/config/doctrine_encrypted_fields.yml'),
+            $container->getResources(),
+            '',
+            false,
+            false
+        );
         $this->assertNull($container->getDefinition('giftcards.encryption.encryptor')->getArgument(4));
+        $this->assertEquals(array(
+            array('connection' => 'default')
+        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener')->getTag('doctrine.event_subscriber'));
     }
 
     public function testLoadWhereDefaultProfileIsSet()
@@ -338,5 +348,48 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
             ->addTag('giftcards.encryption.cipher_text_deserializer', array('priority' => $priority))
         ;
         $this->assertEquals($definition, $container->getDefinition('giftcards.encryption.cipher_text_deserializer.0'));
+    }
+
+    public function testLoadWhereEncryptedFieldsDisabled()
+    {
+        $container = new ContainerBuilder();
+        $this->extension->load(array(array(
+            'doctrine' => array(
+                'encrypted_fields' => array(
+                    'enabled' => false
+                )
+            )
+        )), $container);
+        $this->assertNotContains(
+            new FileResource(__DIR__.'/../../Resources/config/doctrine_encrypted_fields.yml'),
+            $container->getResources(),
+            '',
+            false,
+            false
+        );
+    }
+
+    public function testLoadWhereEncryptedFieldsHasConnectionsConfigured()
+    {
+        $container = new ContainerBuilder();
+        $connection1 = $this->getFaker()->unique()->word;
+        $connection2 = $this->getFaker()->unique()->word;
+        $connection3 = $this->getFaker()->unique()->word;
+        $this->extension->load(array(array(
+            'doctrine' => array(
+                'encrypted_fields' => array(
+                    'connections' => array(
+                        $connection1,
+                        $connection2,
+                        $connection3,
+                    )
+                )
+            )
+        )), $container);
+        $this->assertEquals(array(
+            array('connection' => $connection1),
+            array('connection' => $connection2),
+            array('connection' => $connection3),
+        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener')->getTag('doctrine.event_subscriber'));
     }
 }
