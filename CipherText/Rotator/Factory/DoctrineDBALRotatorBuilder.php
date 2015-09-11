@@ -8,10 +8,10 @@
 
 namespace Giftcards\EncryptionBundle\CipherText\Rotator\Factory;
 
+use Doctrine\DBAL\Connection;
 use Giftcards\Encryption\CipherText\Rotator\Factory\DoctrineDBALRotatorBuilder as BaseDoctrineDBALRotatorBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Doctrine\DBAL\Conection;
 
 class DoctrineDBALRotatorBuilder extends BaseDoctrineDBALRotatorBuilder
 {
@@ -28,8 +28,8 @@ class DoctrineDBALRotatorBuilder extends BaseDoctrineDBALRotatorBuilder
 
     public function configureOptionsResolver(OptionsResolver $resolver)
     {
-        $container = $this->container;
         parent::configureOptionsResolver($resolver);
+        $container = $this->container;
         $resolver
             ->addAllowedTypes(array('connection' => 'string'))
             ->setNormalizers(array('connection' => function ($_, $connection) use ($container) {
@@ -37,7 +37,7 @@ class DoctrineDBALRotatorBuilder extends BaseDoctrineDBALRotatorBuilder
                     return $connection;
                 }
                 
-                return $this->container->get($connection);
+                return $container->get($connection);
             }))
         ;
     }

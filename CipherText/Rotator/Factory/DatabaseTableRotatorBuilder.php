@@ -27,8 +27,8 @@ class DatabaseTableRotatorBuilder extends BaseDatabaseTableRotatorBuilder
 
     public function configureOptionsResolver(OptionsResolver $resolver)
     {
-        $container = $this->container;
         parent::configureOptionsResolver($resolver);
+        $container = $this->container;
         $resolver
             ->addAllowedTypes(array('pdo' => 'string'))
             ->setNormalizers(array('pdo' => function ($_, $pdo) use ($container) {
@@ -36,7 +36,7 @@ class DatabaseTableRotatorBuilder extends BaseDatabaseTableRotatorBuilder
                     return $pdo;
                 }
                 
-                return $this->container->get($pdo);
+                return $container->get($pdo);
             }))
         ;
     }
