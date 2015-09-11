@@ -1,12 +1,16 @@
 services:
     #rotators
     giftcards.encryption.cipher_text_rotator.builder.database_table:
-        class: Giftcards\Encryption\CipherText\Rotator\Factory\DatabaseTableRotatorBuilder
+        class: Giftcards\EncryptionBundle\CipherText\Rotator\Factory\DatabaseTableRotatorBuilder
+        arguments:
+            - @service_container
         tags:
             - { name: giftcards.encryption.cipher_text_rotator.builder, alias: database_table }
 
     giftcards.encryption.cipher_text_rotator.builder.doctrine_dbal:
-        class: Giftcards\Encryption\CipherText\Rotator\Factory\DoctrineDBALRotatorBuilder
+        class: Giftcards\EncryptionBundle\CipherText\Rotator\Factory\DoctrineDBALRotatorBuilder
+        arguments:
+            - @service_container
         tags:
             - { name: giftcards.encryption.cipher_text_rotator.builder, alias: doctrine_dbal }
     
