@@ -1,0 +1,61 @@
+services:
+    #rotators
+    giftcards.encryption.cipher_text_rotator.builder.database_table:
+        class: Giftcards\Encryption\CipherText\Rotator\Factory\DatabaseTableRotatorBuilder
+        tags:
+            - { name: giftcards.encryption.cipher_text_rotator.builder, alias: database_table }
+
+    giftcards.encryption.cipher_text_rotator.builder.doctrine_dbal:
+        class: Giftcards\Encryption\CipherText\Rotator\Factory\DoctrineDBALRotatorBuilder
+        tags:
+            - { name: giftcards.encryption.cipher_text_rotator.builder, alias: doctrine_dbal }
+    
+    #serializers
+    giftcards.encryption.cipher_text_serializer.builder.basic:
+        class: Giftcards\Encryption\CipherText\Serializer\Factory\BasicSerializerDeserializerBuilder
+        tags:
+            - { name: giftcards.encryption.cipher_text_serializer.builder, alias: basic }
+    
+    giftcards.encryption.cipher_text_serializer.builder.no_profile:
+        class: Giftcards\Encryption\CipherText\Serializer\Factory\NoProfileSerializerDeserializerBuilder
+        tags:
+            - { name: giftcards.encryption.cipher_text_serializer.builder, alias: no_profile }
+
+    #deserializers
+    giftcards.encryption.cipher_text_deserializer.builder.basic:
+        class: Giftcards\Encryption\CipherText\Serializer\Factory\BasicSerializerDeserializerBuilder
+        tags:
+            - { name: giftcards.encryption.cipher_text_deserializer.builder, alias: basic }
+    
+    giftcards.encryption.cipher_text_deserializer.builder.no_profile:
+        class: Giftcards\Encryption\CipherText\Serializer\Factory\NoProfileSerializerDeserializerBuilder
+        tags:
+            - { name: giftcards.encryption.cipher_text_deserializer.builder, alias: no_profile }
+
+    #key sources
+    giftcards.encryption.key_source.builder.array:
+        class: Giftcards\Encryption\Key\Factory\ArraySourceBuilder
+        tags:
+            - { name: giftcards.encryption.key_source.builder, alias: array }
+
+    giftcards.encryption.key_source.builder.container_parameters:
+        class: Giftcards\Encryption\Key\Factory\ContainerParametersSourceBuilder
+        tags:
+            - { name: giftcards.encryption.key_source.builder, alias: container_parameters }
+
+    giftcards.encryption.key_source.builder.ini:
+        class: Giftcards\Encryption\Key\Factory\IniFileSourceBuilder
+        tags:
+            - { name: giftcards.encryption.key_source.builder, alias: ini }
+
+    giftcards.encryption.key_source.builder.mongo:
+        class: Giftcards\Encryption\Key\Factory\MongoSourceBuilder
+        tags:
+            - { name: giftcards.encryption.key_source.builder, alias: mongo }
+
+    giftcards.encryption.key_source.builder.vault:
+        class: Giftcards\Encryption\Key\Factory\VaultSourceBuilder
+        tags:
+            - { name: giftcards.encryption.key_source.builder, alias: vault }
+
+            
