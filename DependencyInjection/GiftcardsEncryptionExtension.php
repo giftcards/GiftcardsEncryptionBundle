@@ -153,5 +153,18 @@ class GiftcardsEncryptionExtension extends Extension
                 )
             ;
         }
+
+        if ($config['doctrine']['encrypted_fields']['enabled']) {
+
+            $loader->load('doctrine_encrypted_fields.yml');
+            $listener = $container->getDefinition('giftcards.encryption.listener.encrypted_listener');
+
+            foreach ($config['doctrine']['encrypted_fields']['connections'] as $connection) {
+                $listener->addTag(
+                    'doctrine.event_subscriber',
+                    array('connection' => $connection)
+                );
+            }
+        }
     }
 }
