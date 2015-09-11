@@ -22,21 +22,25 @@ services:
     giftcards.encryption.key_source.factory:
         class: Giftcards\Encryption\Factory\Factory
         arguments:
+            - Giftcards\Encryption\Key\SourceInterface
             - @giftcards.encryption.key_source.factory.registry
             
     giftcards.encryption.cipher_text_rotator.factory:
         class: Giftcards\Encryption\Factory\Factory
         arguments:
+            - Giftcards\Encryption\CipherText\Rotator\RotatorInterface
             - @giftcards.encryption.cipher_text_rotator.factory.registry
             
     giftcards.encryption.cipher_text_serializer.factory:
         class: Giftcards\Encryption\Factory\Factory
         arguments:
+            - Giftcards\Encryption\CipherText\Serializer\SerializerInterface
             - @giftcards.encryption.cipher_text_serializer.factory.registry
             
     giftcards.encryption.cipher_text_deserializer.factory:
         class: Giftcards\Encryption\Factory\Factory
         arguments:
+            - Giftcards\Encryption\CipherText\Serializer\DeserializerInterface
             - @giftcards.encryption.cipher_text_deserializer.factory.registry
             
     giftcards.encryption.abstract_key_source:
