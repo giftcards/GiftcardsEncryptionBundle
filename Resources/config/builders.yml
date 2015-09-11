@@ -18,6 +18,8 @@ services:
     
     giftcards.encryption.cipher_text_serializer.builder.no_profile:
         class: Giftcards\Encryption\CipherText\Serializer\Factory\NoProfileSerializerDeserializerBuilder
+        arguments:
+            - @giftcards.encryption.profile.registry
         tags:
             - { name: giftcards.encryption.cipher_text_serializer.builder, alias: no_profile }
 
@@ -29,6 +31,8 @@ services:
     
     giftcards.encryption.cipher_text_deserializer.builder.no_profile:
         class: Giftcards\Encryption\CipherText\Serializer\Factory\NoProfileSerializerDeserializerBuilder
+        arguments:
+            - @giftcards.encryption.profile.registry
         tags:
             - { name: giftcards.encryption.cipher_text_deserializer.builder, alias: no_profile }
 
