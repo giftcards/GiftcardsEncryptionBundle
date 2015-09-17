@@ -213,7 +213,6 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
             false,
             false
         );
-
         $this->assertEquals(
             new Definition('Giftcards\Encryption\Key\CombiningSource', array($combined, new Reference('giftcards.encryption.key_source'))),
             $container->getDefinition('giftcards.encryption.key_source.combining')
