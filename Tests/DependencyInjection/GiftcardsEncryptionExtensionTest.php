@@ -139,7 +139,7 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
             )
         )), $container);
         $this->assertContains(
-            array('addServiceId', array('giftcards.encryption.key_source.fallback')),
+            array('addServiceId', array('giftcards.encryption.key_source.fallback.circular_guard')),
             $container->getDefinition('giftcards.encryption.key_source.chain')->getMethodCalls(),
             '',
             false,
@@ -148,6 +148,10 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
         $this->assertEquals(
             new Definition('Giftcards\Encryption\Key\FallbackSource', array($fallbacks, new Reference('giftcards.encryption.key_source'))),
             $container->getDefinition('giftcards.encryption.key_source.fallback')
+        );
+        $this->assertEquals(
+            new Definition('Giftcards\Encryption\Key\CircularGuardSource', array(new Reference('giftcards.encryption.key_source.fallback'))),
+            $container->getDefinition('giftcards.encryption.key_source.fallback.circular_guard')
         );
     }
 
@@ -164,7 +168,7 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
             )
         )), $container);
         $this->assertContains(
-            array('addServiceId', array('giftcards.encryption.key_source.mapping')),
+            array('addServiceId', array('giftcards.encryption.key_source.mapping.circular_guard')),
             $container->getDefinition('giftcards.encryption.key_source.chain')->getMethodCalls(),
             '',
             false,
@@ -173,6 +177,10 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
         $this->assertEquals(
             new Definition('Giftcards\Encryption\Key\MappingSource', array($map, new Reference('giftcards.encryption.key_source'))),
             $container->getDefinition('giftcards.encryption.key_source.mapping')
+        );
+        $this->assertEquals(
+            new Definition('Giftcards\Encryption\Key\CircularGuardSource', array(new Reference('giftcards.encryption.key_source.mapping'))),
+            $container->getDefinition('giftcards.encryption.key_source.mapping.circular_guard')
         );
     }
 
@@ -199,7 +207,7 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
             )
         )), $container);
         $this->assertContains(
-            array('addServiceId', array('giftcards.encryption.key_source.combining')),
+            array('addServiceId', array('giftcards.encryption.key_source.combining.circular_guard')),
             $container->getDefinition('giftcards.encryption.key_source.chain')->getMethodCalls(),
             '',
             false,
@@ -209,6 +217,10 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
         $this->assertEquals(
             new Definition('Giftcards\Encryption\Key\CombiningSource', array($combined, new Reference('giftcards.encryption.key_source'))),
             $container->getDefinition('giftcards.encryption.key_source.combining')
+        );
+        $this->assertEquals(
+            new Definition('Giftcards\Encryption\Key\CircularGuardSource', array(new Reference('giftcards.encryption.key_source.combining'))),
+            $container->getDefinition('giftcards.encryption.key_source.combining.circular_guard')
         );
     }
 

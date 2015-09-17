@@ -51,8 +51,13 @@ class GiftcardsEncryptionExtension extends Extension
                     new Reference('giftcards.encryption.key_source')
                 ))
             ;
+            $container->register('giftcards.encryption.key_source.fallback.circular_guard', 'Giftcards\Encryption\Key\CircularGuardSource')
+                ->setArguments(array(
+                    new Reference('giftcards.encryption.key_source.fallback')
+                ))
+            ;
             $container->getDefinition('giftcards.encryption.key_source.chain')
-                ->addMethodCall('addServiceId', array('giftcards.encryption.key_source.fallback'))
+                ->addMethodCall('addServiceId', array('giftcards.encryption.key_source.fallback.circular_guard'))
             ;
         }
         
@@ -63,8 +68,13 @@ class GiftcardsEncryptionExtension extends Extension
                     new Reference('giftcards.encryption.key_source')
                 ))
             ;
+            $container->register('giftcards.encryption.key_source.mapping.circular_guard', 'Giftcards\Encryption\Key\CircularGuardSource')
+                ->setArguments(array(
+                    new Reference('giftcards.encryption.key_source.mapping')
+                ))
+            ;
             $container->getDefinition('giftcards.encryption.key_source.chain')
-                ->addMethodCall('addServiceId', array('giftcards.encryption.key_source.mapping'))
+                ->addMethodCall('addServiceId', array('giftcards.encryption.key_source.mapping.circular_guard'))
             ;
         }
         
@@ -75,8 +85,13 @@ class GiftcardsEncryptionExtension extends Extension
                     new Reference('giftcards.encryption.key_source')
                 ))
             ;
+            $container->register('giftcards.encryption.key_source.combining.circular_guard', 'Giftcards\Encryption\Key\CircularGuardSource')
+                ->setArguments(array(
+                    new Reference('giftcards.encryption.key_source.combining')
+                ))
+            ;
             $container->getDefinition('giftcards.encryption.key_source.chain')
-                ->addMethodCall('addServiceId', array('giftcards.encryption.key_source.combining'))
+                ->addMethodCall('addServiceId', array('giftcards.encryption.key_source.combining.circular_guard'))
             ;
         }
         

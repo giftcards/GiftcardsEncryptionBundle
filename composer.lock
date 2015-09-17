@@ -411,12 +411,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/giftcards/Encryption.git",
-                "reference": "47598f17061b8d23c9781a789a715009f7d5c37f"
+                "reference": "54fad0750546600cdb808ecdc52d33965a7833f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giftcards/Encryption/zipball/47598f17061b8d23c9781a789a715009f7d5c37f",
-                "reference": "47598f17061b8d23c9781a789a715009f7d5c37f",
+                "url": "https://api.github.com/repos/giftcards/Encryption/zipball/54fad0750546600cdb808ecdc52d33965a7833f5",
+                "reference": "54fad0750546600cdb808ecdc52d33965a7833f5",
                 "shasum": ""
             },
             "require-dev": {
@@ -442,7 +442,7 @@
                 "MIT"
             ],
             "description": "Library that helps with managing encrypting data.",
-            "time": "2015-09-11 22:11:49"
+            "time": "2015-09-17 17:24:49"
         },
         {
             "name": "psr/log",
@@ -606,16 +606,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.21.2",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "ddce1136beb8db29b9cd7dffa8ab518b978c9db3"
+                "reference": "b7fc2469fa009897871fb95b68237286fc54a5ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ddce1136beb8db29b9cd7dffa8ab518b978c9db3",
-                "reference": "ddce1136beb8db29b9cd7dffa8ab518b978c9db3",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/b7fc2469fa009897871fb95b68237286fc54a5ad",
+                "reference": "b7fc2469fa009897871fb95b68237286fc54a5ad",
                 "shasum": ""
             },
             "require": {
@@ -628,7 +628,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.21-dev"
+                    "dev-master": "1.22-dev"
                 }
             },
             "autoload": {
@@ -663,22 +663,22 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-09-09 05:28:51"
+            "time": "2015-09-15 06:50:16"
         }
     ],
     "packages-dev": [
         {
             "name": "doctrine/dbal",
-            "version": "v2.5.1",
+            "version": "v2.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "628c2256b646ae2417d44e063bce8aec5199d48d"
+                "reference": "01dbcbc5cd0a913d751418e635434a18a2f2a75c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/628c2256b646ae2417d44e063bce8aec5199d48d",
-                "reference": "628c2256b646ae2417d44e063bce8aec5199d48d",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/01dbcbc5cd0a913d751418e635434a18a2f2a75c",
+                "reference": "01dbcbc5cd0a913d751418e635434a18a2f2a75c",
                 "shasum": ""
             },
             "require": {
@@ -736,7 +736,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2015-01-12 21:52:47"
+            "time": "2015-09-16 16:29:33"
         },
         {
             "name": "fzaninotto/faker",
