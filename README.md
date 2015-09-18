@@ -6,7 +6,7 @@ Bundle to integrate the encryption lib into symfony
 default configuration
 
 ```yaml
-# Default configuration for extension with alias: "giftcards_encryption"
+# Default configuration for extension with alias: "giftcards_encryption"ftcards_encryption --ansi
 giftcards_encryption:
     cipher_texts:
         rotators:
@@ -34,6 +34,7 @@ giftcards_encryption:
             type:                 ~ # Required
             options:              []
             prefix:               ''
+            add_circular_guard:   false
         cache:                false
         map:
 
@@ -50,5 +51,20 @@ giftcards_encryption:
                 left:                 ~ # Required
                 right:                ~ # Required
     default_profile:      null
+    doctrine:
+        encrypted_properties:
+            enabled:              true
+            connections:
+
+                # Default:
+                - default
+
 
 ```
+
+Doctrine
+--------
+
+you can configure the the connections to assign the encrypted properties listener by setting the `doctrine.encrypted_properties.connections` with an
+array of the names of the connections you configured in the doctrine configs that you want the encrypted properties feature to be available for.
+if you are not using doctrine set `doctrine.encrypted_properties.enabled` to false.
