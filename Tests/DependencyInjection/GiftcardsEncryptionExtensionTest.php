@@ -53,7 +53,7 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
             false
         );
         $this->assertContains(
-            new FileResource(__DIR__.'/../../Resources/config/doctrine_encrypted_fields.yml'),
+            new FileResource(__DIR__.'/../../Resources/config/doctrine_encrypted_properties.yml'),
             $container->getResources(),
             '',
             false,
@@ -366,13 +366,13 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
         $container = new ContainerBuilder();
         $this->extension->load(array(array(
             'doctrine' => array(
-                'encrypted_fields' => array(
+                'encrypted_properties' => array(
                     'enabled' => false
                 )
             )
         )), $container);
         $this->assertNotContains(
-            new FileResource(__DIR__.'/../../Resources/config/doctrine_encrypted_fields.yml'),
+            new FileResource(__DIR__.'/../../Resources/config/doctrine_encrypted_properties.yml'),
             $container->getResources(),
             '',
             false,
@@ -388,7 +388,7 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
         $connection3 = $this->getFaker()->unique()->word;
         $this->extension->load(array(array(
             'doctrine' => array(
-                'encrypted_fields' => array(
+                'encrypted_properties' => array(
                     'connections' => array(
                         $connection1,
                         $connection2,

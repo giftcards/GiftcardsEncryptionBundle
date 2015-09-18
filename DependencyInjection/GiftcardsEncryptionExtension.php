@@ -169,12 +169,12 @@ class GiftcardsEncryptionExtension extends Extension
             ;
         }
 
-        if ($config['doctrine']['encrypted_fields']['enabled']) {
-
-            $loader->load('doctrine_encrypted_fields.yml');
+        if ($config['doctrine']['encrypted_properties']['enabled']) {
+            
+            $loader->load('doctrine_encrypted_properties.yml');
             $listener = $container->getDefinition('giftcards.encryption.listener.encrypted_listener');
 
-            foreach ($config['doctrine']['encrypted_fields']['connections'] as $connection) {
+            foreach ($config['doctrine']['encrypted_properties']['connections'] as $connection) {
                 $listener->addTag(
                     'doctrine.event_subscriber',
                     array('connection' => $connection)
