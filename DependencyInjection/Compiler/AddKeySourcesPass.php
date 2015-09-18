@@ -26,14 +26,23 @@ class AddKeySourcesPass implements CompilerPassInterface
             foreach ($tags as $tag) {
                 $serviceId = $id;
                 if (!empty($tag['prefix'])) {
-                    $internalId = $id;
-                    $serviceId = sprintf('%s.prefixed.%s', $id, $tag['prefix']);
+                    $internalId = $serviceId;
+                    $serviceId = sprintf('%s.prefixed.%s', $serviceId, $tag['prefix']);
                     $container
                         ->register($serviceId, 'Giftcards\Encryption\Key\PrefixKeyNameSource')
                         ->setArguments(array(
                             $tag['prefix'],
                             new Reference($internalId)
                         ))
+                    ;
+                }
+                
+                if (!empty($tag['add_circular_guard'])) {
+                    $internalId = $serviceId;
+                    $serviceId = sprintf('%s.circular_guarded', $serviceId);
+                    $container
+                        ->register($serviceId, 'Giftcards\Encryption\Key\CircularGuardSource')
+                        ->setArguments(array(new Reference($internalId)))
                     ;
                 }
                 

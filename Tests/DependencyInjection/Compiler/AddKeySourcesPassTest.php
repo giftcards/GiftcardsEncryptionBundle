@@ -50,6 +50,10 @@ class AddKeySourcesPassTest extends AbstractTestCase
         $container->setDefinition('key_source4', new Definition())->addTag(
             'giftcards.encryption.key_source'
         );
+        $container->setDefinition('key_source5', new Definition())->addTag(
+            'giftcards.encryption.key_source',
+            array('prefix' => 'baz', 'add_circular_guard' => true)
+        );
         $this->pass->process($container);
         $this->assertContains(
             array('addServiceId', array('key_source1.prefixed.foo')),
@@ -79,6 +83,14 @@ class AddKeySourcesPassTest extends AbstractTestCase
             false,
             false
         );
+        $this->assertContains(
+            array('addServiceId', array('key_source5.prefixed.baz.circular_guarded')),
+            $container->getDefinition('giftcards.encryption.key_source.chain')->getMethodCalls(),
+            '',
+            false,
+            false
+        );
+
         $this->assertEquals(new Definition(
             'Giftcards\Encryption\Key\PrefixKeyNameSource',
             array(
@@ -93,5 +105,18 @@ class AddKeySourcesPassTest extends AbstractTestCase
                 new Reference('key_source23')
             )
         ), $container->getDefinition('key_source23.prefixed.bar'));
+        $this->assertEquals(new Definition(
+            'Giftcards\Encryption\Key\PrefixKeyNameSource',
+            array(
+                'baz',
+                new Reference('key_source5')
+            )
+        ), $container->getDefinition('key_source5.prefixed.baz'));
+        $this->assertEquals(new Definition(
+            'Giftcards\Encryption\Key\CircularGuardSource',
+            array(
+                new Reference('key_source5.prefixed.baz')
+            )
+        ), $container->getDefinition('key_source5.prefixed.baz.circular_guarded'));
     }
 }
