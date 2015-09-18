@@ -93,6 +93,7 @@ class Configuration implements ConfigurationInterface
                                         ->end()
                                     ->end()
                                     ->scalarNode('prefix')->defaultValue('')->end()
+                                    ->scalarNode('add_circular_guard')->defaultFalse()->end()
                                 ->end()
                             ->end()
                         ->end()
