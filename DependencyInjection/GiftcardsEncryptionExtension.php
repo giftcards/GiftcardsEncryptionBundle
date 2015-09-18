@@ -116,7 +116,10 @@ class GiftcardsEncryptionExtension extends Extension
                 ->replaceArgument(1, $sourceConfig['options'])
                 ->addTag(
                     'giftcards.encryption.key_source',
-                    array('prefix' => $sourceConfig['prefix'])
+                    array(
+                        'prefix' => $sourceConfig['prefix'],
+                        'add_circular_guard' => $sourceConfig['add_circular_guard']
+                    )
                 )
             ;
         }

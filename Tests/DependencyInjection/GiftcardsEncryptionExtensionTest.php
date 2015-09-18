@@ -251,13 +251,15 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
             $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
         );
         $prefix = $this->getFaker()->unique()->word;
+        $addCircularGuard = $this->getFaker()->boolean();
         $this->extension->load(array(array(
             'keys' => array(
                 'sources' => array(
                     array(
                         'type' => $type,
                         'options' => $options,
-                        'prefix' => $prefix
+                        'prefix' => $prefix,
+                        'add_circular_guard' => $addCircularGuard
                     )
                 ),
             )
@@ -266,7 +268,10 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
         $definition
             ->replaceArgument(0, $type)
             ->replaceArgument(1, $options)
-            ->addTag('giftcards.encryption.key_source', array('prefix' => $prefix))
+            ->addTag('giftcards.encryption.key_source', array(
+                'prefix' => $prefix,
+                'add_circular_guard' => $addCircularGuard
+            ))
         ;
         $this->assertEquals($definition, $container->getDefinition('giftcards.encryption.key_source.0'));
     }
