@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d3b201161196f0f6dfc85f07a46c4be2",
+    "hash": "685d1a1bb8bf30df56e48e6c1ef29480",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -406,17 +406,17 @@
         },
         {
             "name": "giftcards/encryption",
-            "version": "dev-master",
+            "version": "1.0.0",
             "target-dir": "Giftcards/Encryption",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giftcards/Encryption.git",
-                "reference": "54fad0750546600cdb808ecdc52d33965a7833f5"
+                "reference": "b0610a6d85f30b4fc5ac65d0dadc71c8617a6fb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giftcards/Encryption/zipball/54fad0750546600cdb808ecdc52d33965a7833f5",
-                "reference": "54fad0750546600cdb808ecdc52d33965a7833f5",
+                "url": "https://api.github.com/repos/giftcards/Encryption/zipball/b0610a6d85f30b4fc5ac65d0dadc71c8617a6fb0",
+                "reference": "b0610a6d85f30b4fc5ac65d0dadc71c8617a6fb0",
                 "shasum": ""
             },
             "require-dev": {
@@ -442,7 +442,7 @@
                 "MIT"
             ],
             "description": "Library that helps with managing encrypting data.",
-            "time": "2015-09-17 17:24:49"
+            "time": "2015-09-18 00:26:30"
         },
         {
             "name": "psr/log",
@@ -904,7 +904,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "giftcards/encryption": 20,
         "mockery/mockery": 20
     },
     "prefer-stable": false,
