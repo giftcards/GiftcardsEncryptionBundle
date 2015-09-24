@@ -234,8 +234,8 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
         $this->assertEquals('giftcards.encryption.key_source.caching', $container->getAlias('giftcards.encryption.key_source'));
         $this->assertEquals(
             new Definition('Giftcards\Encryption\Key\CachingSource', array(
-                new Reference('giftcards.encryption.key_source.chain'),
-                new Definition('Doctrine\Common\Cache\ArrayCache')
+                new Definition('Doctrine\Common\Cache\ArrayCache'),
+                new Reference('giftcards.encryption.key_source.chain')
             )),
             $container->getDefinition('giftcards.encryption.key_source.caching')
         );

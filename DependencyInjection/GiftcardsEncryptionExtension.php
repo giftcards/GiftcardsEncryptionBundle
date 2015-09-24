@@ -98,8 +98,8 @@ class GiftcardsEncryptionExtension extends Extension
         if ($config['keys']['cache']) {
             $container->register('giftcards.encryption.key_source.caching', 'Giftcards\Encryption\Key\CachingSource')
                 ->setArguments(array(
-                    new Reference((string)$container->getAlias('giftcards.encryption.key_source')),
-                    new Definition('Doctrine\Common\Cache\ArrayCache')
+                    new Definition('Doctrine\Common\Cache\ArrayCache'),
+                    new Reference((string)$container->getAlias('giftcards.encryption.key_source'))
                 ))
             ;
             $container->setAlias('giftcards.encryption.key_source', 'giftcards.encryption.key_source.caching');
