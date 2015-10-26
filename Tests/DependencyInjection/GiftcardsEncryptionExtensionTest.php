@@ -62,7 +62,7 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
         $this->assertNull($container->getDefinition('giftcards.encryption.encryptor')->getArgument(4));
         $this->assertEquals(array(
             array('connection' => 'default')
-        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener')->getTag('doctrine.event_subscriber'));
+        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.default')->getTag('doctrine.event_subscriber'));
     }
 
     public function testLoadWhereDefaultProfileIsSet()
@@ -404,8 +404,12 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
         )), $container);
         $this->assertEquals(array(
             array('connection' => $connection1),
+        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.'.$connection1)->getTag('doctrine.event_subscriber'));
+        $this->assertEquals(array(
             array('connection' => $connection2),
+        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.'.$connection2)->getTag('doctrine.event_subscriber'));
+        $this->assertEquals(array(
             array('connection' => $connection3),
-        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener')->getTag('doctrine.event_subscriber'));
+        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.'.$connection3)->getTag('doctrine.event_subscriber'));
     }
 }
