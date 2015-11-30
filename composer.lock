@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d3b201161196f0f6dfc85f07a46c4be2",
-    "content-hash": "90c122c2b1da07146abe64c055c92783",
+    "hash": "b70aa267404c2e439628825ebb0600a0",
+    "content-hash": "d9d669cc6ded6e86fb1c7bfe9702a7d8",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -407,23 +407,24 @@
         },
         {
             "name": "giftcards/encryption",
-            "version": "dev-master",
+            "version": "1.1.0",
             "target-dir": "Giftcards/Encryption",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giftcards/Encryption.git",
-                "reference": "5d8a207eeec8b798b98a07f538580745ff5f0da3"
+                "reference": "d8e7befee623ff7f5c9409f2540ff59042acd823"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giftcards/Encryption/zipball/5d8a207eeec8b798b98a07f538580745ff5f0da3",
-                "reference": "5d8a207eeec8b798b98a07f538580745ff5f0da3",
+                "url": "https://api.github.com/repos/giftcards/Encryption/zipball/d8e7befee623ff7f5c9409f2540ff59042acd823",
+                "reference": "d8e7befee623ff7f5c9409f2540ff59042acd823",
                 "shasum": ""
             },
             "require-dev": {
                 "doctrine/cache": "~1.4",
                 "doctrine/dbal": "~2.1",
                 "doctrine/mongodb": "~1.1",
+                "doctrine/mongodb-odm": "~1.0",
                 "doctrine/orm": "~2.1",
                 "fzaninotto/faker": "~1.3",
                 "guzzle/guzzle": "~3.4",
@@ -443,7 +444,7 @@
                 "MIT"
             ],
             "description": "Library that helps with managing encrypting data.",
-            "time": "2015-09-25 14:34:19"
+            "time": "2015-11-25 19:05:46"
         },
         {
             "name": "psr/log",
@@ -907,7 +908,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "giftcards/encryption": 20,
         "mockery/mockery": 20
     },
     "prefer-stable": false,

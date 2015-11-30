@@ -4,7 +4,7 @@
   "description": "Bundle to integrate the giftcards/encryption lib into symfony",
   "require": {
     "symfony/symfony": "~2.3",
-    "giftcards/encryption": "dev-master"
+    "giftcards/encryption": "~1.1"
   },
   "require-dev": {
     "mockery/mockery": "@dev",
