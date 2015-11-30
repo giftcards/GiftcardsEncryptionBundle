@@ -62,7 +62,10 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
         $this->assertNull($container->getDefinition('giftcards.encryption.encryptor')->getArgument(4));
         $this->assertEquals(array(
             array('connection' => 'default')
-        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.default')->getTag('doctrine.event_subscriber'));
+        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.default')->getTag('doctrine.event_subscriber'));
+        $this->assertEquals(array(
+            array('connection' => 'default')
+        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.odm.default')->getTag('doctrine_mongodb.odm.event_subscriber'));
     }
 
     public function testLoadWhereDefaultProfileIsSet()
@@ -404,12 +407,60 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
         )), $container);
         $this->assertEquals(array(
             array('connection' => $connection1),
-        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.'.$connection1)->getTag('doctrine.event_subscriber'));
+        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection1)->getTag('doctrine.event_subscriber'));
         $this->assertEquals(array(
             array('connection' => $connection2),
-        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.'.$connection2)->getTag('doctrine.event_subscriber'));
+        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection2)->getTag('doctrine.event_subscriber'));
         $this->assertEquals(array(
             array('connection' => $connection3),
-        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.'.$connection3)->getTag('doctrine.event_subscriber'));
+        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection3)->getTag('doctrine.event_subscriber'));
+    }
+
+    public function testLoadWhereEncryptedFieldsHasConnectionsConfiguredForOrmAndOdm()
+    {
+        $container = new ContainerBuilder();
+        $connection1 = $this->getFaker()->unique()->word;
+        $connection2 = $this->getFaker()->unique()->word;
+        $connection3 = $this->getFaker()->unique()->word;
+        $connection4 = $this->getFaker()->unique()->word;
+        $connection5 = $this->getFaker()->unique()->word;
+        $this->extension->load(array(array(
+            'doctrine' => array(
+                'encrypted_properties' => array(
+                    'orm' => array(
+                        'connections' => array(
+                            $connection1,
+                            $connection2,
+                            $connection3,
+                        )
+                    ),
+                    'odm' => array(
+                        'connections' => array(
+                            $connection1,
+                            $connection4,
+                            $connection5,
+                        )
+                    ),
+                )
+            )
+        )), $container);
+        $this->assertEquals(array(
+            array('connection' => $connection1),
+        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection1)->getTag('doctrine.event_subscriber'));
+        $this->assertEquals(array(
+            array('connection' => $connection2),
+        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection2)->getTag('doctrine.event_subscriber'));
+        $this->assertEquals(array(
+            array('connection' => $connection3),
+        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection3)->getTag('doctrine.event_subscriber'));
+        $this->assertEquals(array(
+            array('connection' => $connection1),
+        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.odm.'.$connection1)->getTag('doctrine_mongodb.odm.event_subscriber'));
+        $this->assertEquals(array(
+            array('connection' => $connection4),
+        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.odm.'.$connection4)->getTag('doctrine_mongodb.odm.event_subscriber'));
+        $this->assertEquals(array(
+            array('connection' => $connection5),
+        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.odm.'.$connection5)->getTag('doctrine_mongodb.odm.event_subscriber'));
     }
 }
