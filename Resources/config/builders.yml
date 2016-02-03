@@ -48,6 +48,8 @@ services:
 
     giftcards.encryption.key_source.builder.container_parameters:
         class: Giftcards\Encryption\Key\Factory\ContainerParametersSourceBuilder
+        arguments:
+            - @service_container
         tags:
             - { name: giftcards.encryption.key_source.builder, alias: container_parameters }
 
