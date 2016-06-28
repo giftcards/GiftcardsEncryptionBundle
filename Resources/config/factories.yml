@@ -2,51 +2,50 @@ services:
     giftcards.encryption.key_source.factory.registry:
         class: Giftcards\Encryption\Factory\ContainerAwareRegistry
         arguments:
-            - @service_container
+            - '@service_container'
             
     giftcards.encryption.cipher_text_rotator.factory.registry:
         class: Giftcards\Encryption\Factory\ContainerAwareRegistry
         arguments:
-            - @service_container
+            - '@service_container'
             
     giftcards.encryption.cipher_text_serializer.factory.registry:
         class: Giftcards\Encryption\Factory\ContainerAwareRegistry
         arguments:
-            - @service_container
+            - '@service_container'
             
     giftcards.encryption.cipher_text_deserializer.factory.registry:
         class: Giftcards\Encryption\Factory\ContainerAwareRegistry
         arguments:
-            - @service_container
+            - '@service_container'
     
     giftcards.encryption.key_source.factory:
         class: Giftcards\Encryption\Factory\Factory
         arguments:
             - Giftcards\Encryption\Key\SourceInterface
-            - @giftcards.encryption.key_source.factory.registry
+            - '@giftcards.encryption.key_source.factory.registry'
             
     giftcards.encryption.cipher_text_rotator.factory:
         class: Giftcards\Encryption\Factory\Factory
         arguments:
             - Giftcards\Encryption\CipherText\Rotator\RotatorInterface
-            - @giftcards.encryption.cipher_text_rotator.factory.registry
+            - '@giftcards.encryption.cipher_text_rotator.factory.registry'
             
     giftcards.encryption.cipher_text_serializer.factory:
         class: Giftcards\Encryption\Factory\Factory
         arguments:
             - Giftcards\Encryption\CipherText\Serializer\SerializerInterface
-            - @giftcards.encryption.cipher_text_serializer.factory.registry
+            - '@giftcards.encryption.cipher_text_serializer.factory.registry'
             
     giftcards.encryption.cipher_text_deserializer.factory:
         class: Giftcards\Encryption\Factory\Factory
         arguments:
             - Giftcards\Encryption\CipherText\Serializer\DeserializerInterface
-            - @giftcards.encryption.cipher_text_deserializer.factory.registry
+            - '@giftcards.encryption.cipher_text_deserializer.factory.registry'
             
     giftcards.encryption.abstract_key_source:
         class: Giftcards\Encryption\Key\SourceInterface
-        factory_service: giftcards.encryption.key_source.factory
-        factory_method: create
+        factory: ['@giftcards.encryption.key_source.factory', create]
         arguments:
             - type
             - options
@@ -54,8 +53,7 @@ services:
     
     giftcards.encryption.abstract_cipher_text_rotator:
         class: Giftcards\Encryption\CipherText\Rotator\RotatorInterface
-        factory_service: giftcards.encryption.cipher_text_rotator.factory
-        factory_method: create
+        factory: ['@giftcards.encryption.cipher_text_rotator.factory', create]
         arguments:
             - type
             - options
@@ -63,8 +61,7 @@ services:
                 
     giftcards.encryption.abstract_cipher_text_serializer:
         class: Giftcards\Encryption\CipherText\Serializer\SerializerInterface
-        factory_service: giftcards.encryption.cipher_text_serializer.factory
-        factory_method: create
+        factory: ['@giftcards.encryption.cipher_text_serializer.factory', create]
         arguments:
             - type
             - options
@@ -72,8 +69,7 @@ services:
                             
     giftcards.encryption.abstract_cipher_text_deserializer:
         class: Giftcards\Encryption\CipherText\Serializer\DeserializerInterface
-        factory_service: giftcards.encryption.cipher_text_deserializer.factory
-        factory_method: create
+        factory: ['@giftcards.encryption.cipher_text_deserializer.factory', create]
         arguments:
             - type
             - options

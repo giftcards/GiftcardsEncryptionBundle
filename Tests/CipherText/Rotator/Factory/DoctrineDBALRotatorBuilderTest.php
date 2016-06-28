@@ -47,26 +47,32 @@ class DoctrineDBALRotatorBuilderTest extends BaseDoctrineDBALRotatorBuilderTest
                 ->getMock()
                 ->shouldReceive('setAllowedTypes')
                 ->once()
-                ->with(array(
-                    'connection' => 'Doctrine\DBAL\Connection',
-                    'table' => 'string',
-                    'fields' => 'array',
-                    'id_field' => 'string'
-                ))
+                ->with('connection', 'Doctrine\DBAL\Connection')
+                ->andReturn(\Mockery::self())
+                ->getMock()
+                ->shouldReceive('setAllowedTypes')
+                ->once()
+                ->with('table', 'string')
+                ->andReturn(\Mockery::self())
+                ->getMock()
+                ->shouldReceive('setAllowedTypes')
+                ->once()
+                ->with('fields', 'array')
+                ->andReturn(\Mockery::self())
+                ->getMock()
+                ->shouldReceive('setAllowedTypes')
+                ->once()
+                ->with('id_field', 'string')
                 ->andReturn(\Mockery::self())
                 ->getMock()
                 ->shouldReceive('addAllowedTypes')
                 ->once()
-                ->with(array(
-                    'connection' => 'string',
-                ))
+                ->with('connection', 'string')
                 ->andReturn(\Mockery::self())
                 ->getMock()
-                ->shouldReceive('setNormalizers')
+                ->shouldReceive('setNormalizer')
                 ->once()
-                ->with(new EqualsMatcher(array(
-                    'connection' => function () {},
-                )))
+                ->with('connection', new EqualsMatcher(function () {}))
                 ->andReturn(\Mockery::self())
                 ->getMock()
         );

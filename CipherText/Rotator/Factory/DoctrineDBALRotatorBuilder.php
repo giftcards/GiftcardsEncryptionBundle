@@ -31,14 +31,14 @@ class DoctrineDBALRotatorBuilder extends BaseDoctrineDBALRotatorBuilder
         parent::configureOptionsResolver($resolver);
         $container = $this->container;
         $resolver
-            ->addAllowedTypes(array('connection' => 'string'))
-            ->setNormalizers(array('connection' => function ($_, $connection) use ($container) {
+            ->addAllowedTypes('connection', 'string')
+            ->setNormalizer('connection', function ($_, $connection) use ($container) {
                 if ($connection instanceof Connection) {
                     return $connection;
                 }
                 
                 return $container->get($connection);
-            }))
+            })
         ;
     }
 }

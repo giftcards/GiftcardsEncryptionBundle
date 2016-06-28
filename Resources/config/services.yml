@@ -9,12 +9,12 @@ services:
     giftcards.encryption.cipher_text_rotator.registry:
         class: Giftcards\Encryption\CipherText\Rotator\ContainerAwareRotatorRegistry
         arguments:
-            - @service_container
+            - '@service_container'
         
     giftcards.encryption.cipher.registry:
         class: Giftcards\Encryption\Cipher\ContainerAwareCipherRegistry
         arguments:
-            - @service_container
+            - '@service_container'
         
     giftcards.encryption.profile.registry:
         class: Giftcards\Encryption\Profile\ProfileRegistry
@@ -22,7 +22,7 @@ services:
     giftcards.encryption.key_source.chain:
         class: Giftcards\Encryption\Key\ContainerAwareChainSource
         arguments:
-            - @service_container
+            - '@service_container'
         
     giftcards.encryption.cipher.mysql_aes:
         class: Giftcards\Encryption\Cipher\MysqlAes
@@ -37,21 +37,21 @@ services:
     giftcards.encryption.cipher_text_serializer_deserializer.chain:
         class: Giftcards\Encryption\CipherText\Serializer\ContainerAwareChainSerializerDeserializer
         arguments:
-            - @service_container
+            - '@service_container'
      
     giftcards.encryption.encryptor:
         class: Giftcards\Encryption\Encryptor
         arguments:
-            - @giftcards.encryption.cipher.registry
-            - @giftcards.encryption.key_source
-            - @giftcards.encryption.profile.registry
-            - @giftcards.encryption.cipher_text_serializer_deserializer
+            - '@giftcards.encryption.cipher.registry'
+            - '@giftcards.encryption.key_source'
+            - '@giftcards.encryption.profile.registry'
+            - '@giftcards.encryption.cipher_text_serializer_deserializer'
             - default_profile
         
     giftcards.encryption.command.rotate_encryption_profile:
         class: Giftcards\Encryption\Command\RotateEncryptionProfileCommand
         arguments:
-            - @giftcards.encryption.cipher_text_rotator.registry
-            - @giftcards.encryption.encryptor
+            - '@giftcards.encryption.cipher_text_rotator.registry'
+            - '@giftcards.encryption.encryptor'
         tags:
             - { name: console.command }

@@ -2,12 +2,12 @@ services:
     giftcards.encryption.listener.abstract_encrypted_listener:
         class: Giftcards\Encryption\Doctrine\EventListener\EncryptedListener
         arguments:
-            - @giftcards.encryption.encryptor
-            - @giftcards.encryption.listener.encrypt_listener.driver
+            - '@giftcards.encryption.encryptor'
+            - '@giftcards.encryption.listener.encrypt_listener.driver'
         abstract: true
           
     giftcards.encryption.listener.encrypt_listener.driver:
         class: Giftcards\Encryption\Doctrine\Configuration\Metadata\Driver\AnnotationDriver
         public: false
         arguments:
-            - @annotation_reader
+            - '@annotation_reader'

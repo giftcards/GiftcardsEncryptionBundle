@@ -30,14 +30,14 @@ class DatabaseTableRotatorBuilder extends BaseDatabaseTableRotatorBuilder
         parent::configureOptionsResolver($resolver);
         $container = $this->container;
         $resolver
-            ->addAllowedTypes(array('pdo' => 'string'))
-            ->setNormalizers(array('pdo' => function ($_, $pdo) use ($container) {
+            ->addAllowedTypes('pdo', 'string')
+            ->setNormalizer('pdo', function ($_, $pdo) use ($container) {
                 if ($pdo instanceof \PDO) {
                     return $pdo;
                 }
                 
                 return $container->get($pdo);
-            }))
+            })
         ;
     }
 }
