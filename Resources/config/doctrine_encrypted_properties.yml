@@ -2,7 +2,7 @@ services:
     giftcards.encryption.listener.abstract_encrypted_listener:
         class: Giftcards\Encryption\Doctrine\EventListener\EncryptedListener
         arguments:
-            - '@giftcards.encryption.encryptor'
+            - '@giftcards.encryption.doctrine.field_encryptor'
             - '@giftcards.encryption.listener.encrypt_listener.driver'
         abstract: true
           
@@ -11,3 +11,8 @@ services:
         public: false
         arguments:
             - '@annotation_reader'
+            
+    giftcards.encryption.doctrine.field_encryptor:
+        class: Giftcards\Encryption\Doctrine\FieldEncryptor
+        arguments:
+            - '@giftcards.encryption.encryptor'
