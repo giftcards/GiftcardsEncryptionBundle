@@ -55,3 +55,20 @@ services:
             - '@giftcards.encryption.encryptor'
         tags:
             - { name: console.command }
+
+    giftcards.encryption.rotator:
+        class: Giftcards\Encryption\CipherText\Rotator\Rotator
+        arguments:
+            - '@giftcards.encryption.encryptor'
+            - '@giftcards.encryption.store_registry' #TODO: Create this service
+
+    giftcards.encryption.command.rotate_store:
+        class: Giftcards\Encryption\Command\RotateStoreCommand
+        arguments:
+            - '@giftcards.encryption.rotator'
+            - '@giftcards.encryption.rotator.tracker' #TODO: Create this service
+
+    giftcards.encryption.command.rotate_range:
+        class: Giftcards\Encryption\Command\RotateRangeInStoreCommand
+        arguments:
+            - '@giftcards.encryption.rotator'
