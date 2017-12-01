@@ -7,6 +7,7 @@ use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextRotator
 use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCiphersPass;
 use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextSerializersDeserializersPass;
 use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddKeySourcesPass;
+use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddSourceRegistryPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -20,6 +21,7 @@ class GiftcardsEncryptionBundle extends Bundle
             ->addCompilerPass(new AddKeySourcesPass())
             ->addCompilerPass(new AddCipherTextSerializersDeserializersPass())
             ->addCompilerPass(new AddBuildersPass())
+            ->addCompilerPass(new AddSourceRegistryPass())
         ;
     }
 }

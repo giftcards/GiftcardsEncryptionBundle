@@ -56,11 +56,19 @@ services:
         tags:
             - { name: console.command }
 
+    giftcards.encryption.store_registry_builder:
+        class: Giftcards\Encryption\CipherText\Rotator\Store\StoreRegistryBuilder
+        factory: ['Giftcards\Encryption\CipherText\Rotator\Store\StoreRegistryBuilder', newInstance]
+
+    giftcards.encryption.store_registry:
+        class: Giftcards\Encryption\CipherText\Rotator\Store\StoreRegistry
+        factory: ['@giftcards.encryption.store_registry_builder', build]
+
     giftcards.encryption.rotator:
         class: Giftcards\Encryption\CipherText\Rotator\Rotator
         arguments:
             - '@giftcards.encryption.encryptor'
-            - '@giftcards.encryption.store_registry' #TODO: Create this service
+            - '@giftcards.encryption.store_registry'
 
     giftcards.encryption.command.rotate_store:
         class: Giftcards\Encryption\Command\RotateStoreCommand
