@@ -6,8 +6,8 @@ use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddBuildersPass;
 use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextRotatorsPass;
 use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCiphersPass;
 use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextSerializersDeserializersPass;
+use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextStoresPass;
 use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddKeySourcesPass;
-use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddSourceRegistryPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -17,11 +17,11 @@ class GiftcardsEncryptionBundle extends Bundle
     {
         $container
             ->addCompilerPass(new AddCipherTextRotatorsPass())
+            ->addCompilerPass(new AddCipherTextStoresPass())
             ->addCompilerPass(new AddCiphersPass())
             ->addCompilerPass(new AddKeySourcesPass())
             ->addCompilerPass(new AddCipherTextSerializersDeserializersPass())
             ->addCompilerPass(new AddBuildersPass())
-            ->addCompilerPass(new AddSourceRegistryPass())
         ;
     }
 }

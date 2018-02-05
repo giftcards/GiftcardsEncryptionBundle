@@ -8,6 +8,11 @@ services:
         class: Giftcards\Encryption\Factory\ContainerAwareRegistry
         arguments:
             - '@service_container'
+
+    giftcards.encryption.cipher_text_store.factory.registry:
+        class: Giftcards\Encryption\Factory\ContainerAwareRegistry
+        arguments:
+            - '@service_container'
             
     giftcards.encryption.cipher_text_serializer.factory.registry:
         class: Giftcards\Encryption\Factory\ContainerAwareRegistry
@@ -30,7 +35,13 @@ services:
         arguments:
             - Giftcards\Encryption\CipherText\Rotator\RotatorInterface
             - '@giftcards.encryption.cipher_text_rotator.factory.registry'
-            
+
+    giftcards.encryption.cipher_text_store.factory:
+        class: Giftcards\Encryption\Factory\Factory
+        arguments:
+            - Giftcards\Encryption\CipherText\Rotator\Store\StoreInterface
+            - '@giftcards.encryption.cipher_text_store.factory.registry'
+
     giftcards.encryption.cipher_text_serializer.factory:
         class: Giftcards\Encryption\Factory\Factory
         arguments:
@@ -58,6 +69,14 @@ services:
             - type
             - options
         abstract: true
+
+    giftcards.encryption.abstract_cipher_text_store:
+        class: Giftcards\Encryption\CipherText\Rotator\Store\StoreInterface
+        factory: ['@giftcards.encryption.cipher_text_store.factory', create]
+        arguments:
+            - type
+            - options
+        abstract: true
                 
     giftcards.encryption.abstract_cipher_text_serializer:
         class: Giftcards\Encryption\CipherText\Serializer\SerializerInterface
@@ -74,4 +93,3 @@ services:
             - type
             - options
         abstract: true
-            

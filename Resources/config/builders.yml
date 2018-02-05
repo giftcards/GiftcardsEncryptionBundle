@@ -13,6 +13,14 @@ services:
             - '@service_container'
         tags:
             - { name: giftcards.encryption.cipher_text_rotator.builder, alias: doctrine_dbal }
+
+    #stores
+    giftcards.encryption.cipher_text_store.builder.doctrine_dbal:
+        class: Giftcards\EncryptionBundle\CipherText\Rotator\Store\DoctrineDBALStoreBuilder
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: giftcards.encryption.cipher_text_store.builder, alias: doctrine_dbal }
     
     #serializers
     giftcards.encryption.cipher_text_serializer.builder.basic:
