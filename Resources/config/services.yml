@@ -67,11 +67,14 @@ services:
             - '@giftcards.encryption.encryptor'
             - '@giftcards.encryption.cipher_text_store.registry'
 
+    giftcards.encryption.rotator.tracker.null:
+        class: Giftcards\Encryption\CipherText\Rotator\Tracker\NullTracker
+
     giftcards.encryption.command.rotate_store:
         class: Giftcards\Encryption\Command\RotateStoreCommand
         arguments:
             - '@giftcards.encryption.rotator'
-            - '@giftcards.encryption.rotator.tracker' #TODO: Create this service
+            - '@giftcards.encryption.rotator.tracker'
 
     giftcards.encryption.command.rotate_range:
         class: Giftcards\Encryption\Command\RotateRangeInStoreCommand

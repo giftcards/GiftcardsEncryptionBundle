@@ -140,6 +140,8 @@ class GiftcardsEncryptionExtension extends Extension
             ;
         }
 
+        $container->setAlias("giftcards.encryption.rotator.tracker", $config['rotator']['tracker']['id']);
+
         foreach ($config['cipher_texts']['stores'] as $name => $rotatorConfig) {
             $serviceId = sprintf('giftcards.encryption.cipher_text_store.%s', $name);
             $container
