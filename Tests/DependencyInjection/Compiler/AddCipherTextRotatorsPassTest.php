@@ -8,7 +8,7 @@
 
 namespace Giftcards\EncryptionBundle\Tests\DependencyInjection\Compiler;
 
-use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextRotatorsPass;
+use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextStoresPass;
 use Giftcards\Encryption\Tests\AbstractTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -16,12 +16,12 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class AddCipherTextRotatorsPassTest extends AbstractTestCase
 {
-    /** @var  AddCipherTextRotatorsPass */
+    /** @var  AddCipherTextStoresPass */
     protected $pass;
 
     public function setUp()
     {
-        $this->pass = new AddCipherTextRotatorsPass();
+        $this->pass = new AddCipherTextStoresPass();
     }
 
     public function testProcessWithNoRegistry()

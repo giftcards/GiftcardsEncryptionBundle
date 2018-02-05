@@ -140,6 +140,24 @@ class GiftcardsEncryptionExtension extends Extension
             ;
         }
 
+        $container->setAlias("giftcards.encryption.rotator.tracker", $config['rotator']['tracker']['id']);
+
+        foreach ($config['cipher_texts']['stores'] as $name => $rotatorConfig) {
+            $serviceId = sprintf('giftcards.encryption.cipher_text_store.%s', $name);
+            $container
+                ->setDefinition(
+                    $serviceId,
+                    new DefinitionDecorator('giftcards.encryption.abstract_cipher_text_store')
+                )
+                ->replaceArgument(0, $rotatorConfig['type'])
+                ->replaceArgument(1, $rotatorConfig['options'])
+                ->addTag(
+                    'giftcards.encryption.cipher_text_store',
+                    array('alias' => $name)
+                )
+            ;
+        }
+
         foreach ($config['cipher_texts']['serializers'] as $name => $serializerConfig) {
             $serviceId = sprintf('giftcards.encryption.cipher_text_serializer.%s', $name);
             $container

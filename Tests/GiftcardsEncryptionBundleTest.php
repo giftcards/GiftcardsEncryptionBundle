@@ -27,7 +27,7 @@ class GiftcardsEncryptionBundleTest extends AbstractTestCase
             \Mockery::mock('Symfony\Component\DependencyInjection\ContainerBuilder')
                 ->shouldReceive('addCompilerPass')
                 ->once()
-                ->with('Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextRotatorsPass')
+                ->with('Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextStoresPass')
                 ->andReturn(\Mockery::self())
                 ->getMock()
                 ->shouldReceive('addCompilerPass')

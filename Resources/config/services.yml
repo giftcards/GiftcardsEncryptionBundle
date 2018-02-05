@@ -10,6 +10,11 @@ services:
         class: Giftcards\Encryption\CipherText\Rotator\ContainerAwareRotatorRegistry
         arguments:
             - '@service_container'
+
+    giftcards.encryption.cipher_text_store.registry:
+        class: Giftcards\Encryption\CipherText\Rotator\Store\ContainerAwareStoreRegistry
+        arguments:
+            - '@service_container'
         
     giftcards.encryption.cipher.registry:
         class: Giftcards\Encryption\Cipher\ContainerAwareCipherRegistry
@@ -55,3 +60,23 @@ services:
             - '@giftcards.encryption.encryptor'
         tags:
             - { name: console.command }
+
+    giftcards.encryption.rotator:
+        class: Giftcards\Encryption\CipherText\Rotator\Rotator
+        arguments:
+            - '@giftcards.encryption.encryptor'
+            - '@giftcards.encryption.cipher_text_store.registry'
+
+    giftcards.encryption.rotator.tracker.null:
+        class: Giftcards\Encryption\CipherText\Rotator\Tracker\NullTracker
+
+    giftcards.encryption.command.rotate_store:
+        class: Giftcards\Encryption\Command\RotateStoreCommand
+        arguments:
+            - '@giftcards.encryption.rotator'
+            - '@giftcards.encryption.rotator.tracker'
+
+    giftcards.encryption.command.rotate_range:
+        class: Giftcards\Encryption\Command\RotateRangeInStoreCommand
+        arguments:
+            - '@giftcards.encryption.rotator'
