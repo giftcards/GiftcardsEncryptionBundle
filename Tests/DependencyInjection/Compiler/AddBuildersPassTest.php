@@ -18,8 +18,7 @@ class AddBuildersPassTest extends AbstractExtendableTestCase
     /** @var  AddBuildersPass */
     protected $pass;
 
-    public
-function setUp() : void
+    public function setUp() : void
     {
         $this->pass = new AddBuildersPass();
     }

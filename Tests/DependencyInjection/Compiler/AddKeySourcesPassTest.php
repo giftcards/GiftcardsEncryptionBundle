@@ -19,8 +19,7 @@ class AddKeySourcesPassTest extends AbstractExtendableTestCase
     /** @var  AddKeySourcesPass */
     protected $pass;
 
-    public
-function setUp() : void
+    public function setUp() : void
     {
         $this->pass = new AddKeySourcesPass();
     }

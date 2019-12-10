@@ -24,8 +24,7 @@ class DoctrineDBALRotatorBuilderTest extends BaseDoctrineDBALRotatorBuilderTest
     /** @var  ContainerInterface */
     protected $container;
 
-    public
-function setUp() : void
+    public function setUp() : void
     {
         $this->builder = new DoctrineDBALRotatorBuilder(
             $this->container = new Container()

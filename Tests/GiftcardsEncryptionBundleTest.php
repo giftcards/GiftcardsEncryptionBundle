@@ -18,8 +18,7 @@ class GiftcardsEncryptionBundleTest extends AbstractExtendableTestCase
     /** @var  GiftcardsEncryptionBundle */
     protected $bundle;
 
-    public
-function setUp() : void
+    public function setUp() : void
     {
         $this->bundle = new GiftcardsEncryptionBundle();
     }

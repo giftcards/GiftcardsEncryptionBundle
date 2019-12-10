@@ -18,8 +18,7 @@ class AddCipherTextRotatorsPassTest extends AbstractExtendableTestCase
     /** @var  AddCipherTextRotatorsPass */
     protected $pass;
 
-    public
-function setUp() : void
+    public function setUp() : void
     {
         $this->pass = new AddCipherTextRotatorsPass();
     }

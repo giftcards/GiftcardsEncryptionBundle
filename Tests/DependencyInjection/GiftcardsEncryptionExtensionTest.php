@@ -22,8 +22,7 @@ class GiftcardsEncryptionExtensionTest extends AbstractExtendableTestCase
     /** @var  GiftcardsEncryptionExtension */
     protected $extension;
 
-    public
-function setUp() : void
+    public function setUp() : void
     {
         $this->extension = new GiftcardsEncryptionExtension();
     }

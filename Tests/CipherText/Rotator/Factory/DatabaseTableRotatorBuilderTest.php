@@ -25,8 +25,7 @@ class DatabaseTableRotatorBuilderTest extends BaseDatabaseTableRotatorBuilderTes
     /** @var  ContainerInterface */
     protected $container;
 
-    public
-function setUp() : void
+    public function setUp() : void
     {
         $this->builder = new DatabaseTableRotatorBuilder(
             $this->container = new Container()

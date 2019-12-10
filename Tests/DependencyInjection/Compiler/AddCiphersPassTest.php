@@ -18,8 +18,7 @@ class AddCiphersPassTest extends AbstractExtendableTestCase
     /** @var  AddCiphersPass */
     protected $pass;
 
-    public
-function setUp() : void
+    public function setUp() : void
     {
         $this->pass = new AddCiphersPass();
     }

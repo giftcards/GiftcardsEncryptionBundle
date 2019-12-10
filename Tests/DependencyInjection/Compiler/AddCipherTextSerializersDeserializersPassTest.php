@@ -18,8 +18,7 @@ class AddCipherTextSerializersDeserializersPassTest extends AbstractExtendableTe
     /** @var  AddCipherTextSerializersDeserializersPass */
     protected $pass;
 
-    public
-function setUp() : void
+    public function setUp() : void
     {
         $this->pass = new AddCipherTextSerializersDeserializersPass();
     }
