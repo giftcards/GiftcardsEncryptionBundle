@@ -10,19 +10,20 @@ namespace Giftcards\EncryptionBundle\Tests\DependencyInjection;
 
 use Giftcards\Encryption\Key\CombiningSource;
 use Giftcards\EncryptionBundle\DependencyInjection\GiftcardsEncryptionExtension;
-use Giftcards\Encryption\Tests\AbstractTestCase;
+use Omni\TestingBundle\TestCase\Extension\AbstractExtendableTestCase;
 use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 
-class GiftcardsEncryptionExtensionTest extends AbstractTestCase
+class GiftcardsEncryptionExtensionTest extends AbstractExtendableTestCase
 {
     /** @var  GiftcardsEncryptionExtension */
     protected $extension;
 
-    public function setUp()
+    public
+function setUp() : void
     {
         $this->extension = new GiftcardsEncryptionExtension();
     }
@@ -30,54 +31,39 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
     public function testLoad()
     {
         $container = new ContainerBuilder();
-        $this->extension->load(array(), $container);
-        $this->assertContains(
+        $this->extension->load([], $container);
+        $this->assertContainsEquals(
             new FileResource(__DIR__.'/../../Resources/config/services.yml'),
-            $container->getResources(),
-            '',
-            false,
-            false
+            $container->getResources()
         );
-        $this->assertContains(
+        $this->assertContainsEquals(
             new FileResource(__DIR__.'/../../Resources/config/factories.yml'),
-            $container->getResources(),
-            '',
-            false,
-            false
+            $container->getResources()
         );
-        $this->assertContains(
+        $this->assertContainsEquals(
             new FileResource(__DIR__.'/../../Resources/config/builders.yml'),
-            $container->getResources(),
-            '',
-            false,
-            false
+            $container->getResources()
         );
-        $this->assertContains(
+        $this->assertContainsEquals(
             new FileResource(__DIR__.'/../../Resources/config/doctrine_encrypted_properties.yml'),
-            $container->getResources(),
-            '',
-            false,
-            false
+            $container->getResources()
         );
         $this->assertNull($container->getDefinition('giftcards.encryption.encryptor')->getArgument(4));
-        $this->assertEquals(array(
-            array('connection' => 'default')
-        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.default')->getTag('doctrine.event_subscriber'));
-        $this->assertEquals(array(
-            array('connection' => 'default')
-        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.odm.default')->getTag('doctrine_mongodb.odm.event_subscriber'));
+        $this->assertEquals([
+            ['connection' => 'default']
+        ], $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.default')->getTag('doctrine.event_subscriber'));
+        $this->assertEquals([
+            ['connection' => 'default']
+        ], $container->getDefinition('giftcards.encryption.listener.encrypted_listener.odm.default')->getTag('doctrine_mongodb.odm.event_subscriber'));
     }
 
     public function testLoadWhereDefaultProfileIsSet()
     {
         $container = new ContainerBuilder();
-        $this->extension->load(array(array('default_profile' => 'default')), $container);
-        $this->assertContains(
+        $this->extension->load([['default_profile' => 'default']], $container);
+        $this->assertContainsEquals(
             new FileResource(__DIR__.'/../../Resources/config/services.yml'),
-            $container->getResources(),
-            '',
-            false,
-            false
+            $container->getResources()
         );
         $this->assertEquals(
             'default',
@@ -88,72 +74,75 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
     public function testLoadWhereDefaultProfilesConfigured()
     {
         $container = new ContainerBuilder();
-        $this->extension->load(array(array(
-            'profiles' => array(
-                'foo' => array(
-                    'cipher' => 'cipher1',
-                    'key_name' => 'key1'
-                ),
-                'bar' => array(
-                    'cipher' => 'cipher2',
-                    'key_name' => 'key2'
-                ),
-            )
-        )), $container);
-        $this->assertContains(
-            array('set', array('foo', new Definition(
-                'Giftcards\Encryption\Profile\Profile',
-                array('cipher1', 'key1')
-            ))),
-            $container->getDefinition('giftcards.encryption.profile.registry')->getMethodCalls(),
-            '',
-            false,
-            false
+        $this->extension->load([
+            [
+              'profiles' => [
+                    'foo' => [
+                        'cipher' => 'cipher1',
+                        'key_name' => 'key1'
+                    ],
+                    'bar' => [
+                        'cipher' => 'cipher2',
+                        'key_name' => 'key2'
+                    ],
+                ]
+            ]
+        ], $container);
+        $this->assertContainsEquals(
+            [
+                'set', [
+                   'foo', new Definition(
+                        'Giftcards\Encryption\Profile\Profile',
+                        ['cipher1', 'key1']
+                    )
+                ]
+            ],
+            $container->getDefinition('giftcards.encryption.profile.registry')->getMethodCalls()
         );
-        $this->assertContains(
-            array('set', array('bar', new Definition(
+        $this->assertContainsEquals(
+            [
+                'set', [
+                'bar', new Definition(
                 'Giftcards\Encryption\Profile\Profile',
-                array('cipher2', 'key2')
-            ))),
-            $container->getDefinition('giftcards.encryption.profile.registry')->getMethodCalls(),
-            '',
-            false,
-            false
+                ['cipher2', 'key2']
+            )
+            ]
+            ],
+            $container->getDefinition('giftcards.encryption.profile.registry')->getMethodCalls()
         );
     }
 
     public function testLoadWhereKeyFallbacksAreConfigured()
     {
         $container = new ContainerBuilder();
-        $fallbacks = array(
-            'key1' => array(
+        $fallbacks = [
+            'key1' => [
                 'key3',
                 'key4'
-            ),
-            'key2' => array(
+            ],
+            'key2' => [
                 'key5',
                 'key6',
                 'key7',
-            )
-        );
-        $this->extension->load(array(array(
-            'keys' => array(
+            ]
+        ];
+        $this->extension->load([
+            [
+            'keys' => [
                 'fallbacks' => $fallbacks,
-            )
-        )), $container);
-        $this->assertContains(
-            array('addServiceId', array('giftcards.encryption.key_source.fallback.circular_guard')),
-            $container->getDefinition('giftcards.encryption.key_source.chain')->getMethodCalls(),
-            '',
-            false,
-            false
+            ]
+            ]
+        ], $container);
+        $this->assertContainsEquals(
+            ['addServiceId', ['giftcards.encryption.key_source.fallback.circular_guard']],
+            $container->getDefinition('giftcards.encryption.key_source.chain')->getMethodCalls()
         );
         $this->assertEquals(
-            new Definition('Giftcards\Encryption\Key\FallbackSource', array($fallbacks, new Reference('giftcards.encryption.key_source'))),
+            new Definition('Giftcards\Encryption\Key\FallbackSource', [$fallbacks, new Reference('giftcards.encryption.key_source')]),
             $container->getDefinition('giftcards.encryption.key_source.fallback')
         );
         $this->assertEquals(
-            new Definition('Giftcards\Encryption\Key\CircularGuardSource', array(new Reference('giftcards.encryption.key_source.fallback'))),
+            new Definition('Giftcards\Encryption\Key\CircularGuardSource', [new Reference('giftcards.encryption.key_source.fallback')]),
             $container->getDefinition('giftcards.encryption.key_source.fallback.circular_guard')
         );
     }
@@ -161,28 +150,27 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
     public function testLoadWhereKeyMapIsConfigured()
     {
         $container = new ContainerBuilder();
-        $map = array(
+        $map = [
             'key1' => 'key3',
             'key2' => 'key5',
-        );
-        $this->extension->load(array(array(
-            'keys' => array(
-                'map' => $map,
-            )
-        )), $container);
-        $this->assertContains(
-            array('addServiceId', array('giftcards.encryption.key_source.mapping.circular_guard')),
-            $container->getDefinition('giftcards.encryption.key_source.chain')->getMethodCalls(),
-            '',
-            false,
-            false
+        ];
+        $this->extension->load([
+            [
+                'keys' => [
+                    'map' => $map,
+                ]
+            ]
+        ], $container);
+        $this->assertContainsEquals(
+            ['addServiceId', ['giftcards.encryption.key_source.mapping.circular_guard']],
+            $container->getDefinition('giftcards.encryption.key_source.chain')->getMethodCalls()
         );
         $this->assertEquals(
-            new Definition('Giftcards\Encryption\Key\MappingSource', array($map, new Reference('giftcards.encryption.key_source'))),
+            new Definition('Giftcards\Encryption\Key\MappingSource', [$map, new Reference('giftcards.encryption.key_source')]),
             $container->getDefinition('giftcards.encryption.key_source.mapping')
         );
         $this->assertEquals(
-            new Definition('Giftcards\Encryption\Key\CircularGuardSource', array(new Reference('giftcards.encryption.key_source.mapping'))),
+            new Definition('Giftcards\Encryption\Key\CircularGuardSource', [new Reference('giftcards.encryption.key_source.mapping')]),
             $container->getDefinition('giftcards.encryption.key_source.mapping.circular_guard')
         );
     }
@@ -190,38 +178,37 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
     public function testLoadWhereCombinedKeysAreConfigured()
     {
         $container = new ContainerBuilder();
-        $combined = array(
-            $this->getFaker()->unique()->word => array(
+        $combined = [
+            $this->getFaker()->unique()->word => [
                 CombiningSource::LEFT => $this->getFaker()->unique()->word,
                 CombiningSource::RIGHT => $this->getFaker()->unique()->word,
-            ),
-            $this->getFaker()->unique()->word => array(
+            ],
+            $this->getFaker()->unique()->word => [
                 CombiningSource::LEFT => $this->getFaker()->unique()->word,
                 CombiningSource::RIGHT => $this->getFaker()->unique()->word,
-            ),
-            $this->getFaker()->unique()->word => array(
+            ],
+            $this->getFaker()->unique()->word => [
                 CombiningSource::LEFT => $this->getFaker()->unique()->word,
                 CombiningSource::RIGHT => $this->getFaker()->unique()->word,
-            ),
-        );
-        $this->extension->load(array(array(
-            'keys' => array(
-                'combine' => $combined,
-            )
-        )), $container);
-        $this->assertContains(
-            array('addServiceId', array('giftcards.encryption.key_source.combining.circular_guard')),
-            $container->getDefinition('giftcards.encryption.key_source.chain')->getMethodCalls(),
-            '',
-            false,
-            false
+            ],
+        ];
+        $this->extension->load([
+            [
+                'keys' => [
+                    'combine' => $combined,
+                ]
+            ]
+        ], $container);
+        $this->assertContainsEquals(
+            ['addServiceId', ['giftcards.encryption.key_source.combining.circular_guard']],
+            $container->getDefinition('giftcards.encryption.key_source.chain')->getMethodCalls()
         );
         $this->assertEquals(
-            new Definition('Giftcards\Encryption\Key\CombiningSource', array($combined, new Reference('giftcards.encryption.key_source'))),
+            new Definition('Giftcards\Encryption\Key\CombiningSource', [$combined, new Reference('giftcards.encryption.key_source')]),
             $container->getDefinition('giftcards.encryption.key_source.combining')
         );
         $this->assertEquals(
-            new Definition('Giftcards\Encryption\Key\CircularGuardSource', array(new Reference('giftcards.encryption.key_source.combining'))),
+            new Definition('Giftcards\Encryption\Key\CircularGuardSource', [new Reference('giftcards.encryption.key_source.combining')]),
             $container->getDefinition('giftcards.encryption.key_source.combining.circular_guard')
         );
     }
@@ -229,17 +216,19 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
     public function testLoadWhereCacheIsTrue()
     {
         $container = new ContainerBuilder();
-        $this->extension->load(array(array(
-            'keys' => array(
-                'cache' => true,
-            )
-        )), $container);
+        $this->extension->load([
+            [
+                'keys' => [
+                    'cache' => true,
+                ]
+            ]
+        ], $container);
         $this->assertEquals('giftcards.encryption.key_source.caching', $container->getAlias('giftcards.encryption.key_source'));
         $this->assertEquals(
-            new Definition('Giftcards\Encryption\Key\CachingSource', array(
+            new Definition('Giftcards\Encryption\Key\CachingSource', [
                 new Definition('Doctrine\Common\Cache\ArrayCache'),
                 new Reference('giftcards.encryption.key_source.chain')
-            )),
+            ]),
             $container->getDefinition('giftcards.encryption.key_source.caching')
         );
     }
@@ -248,33 +237,35 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
     {
         $container = new ContainerBuilder();
         $type = $this->getFaker()->unique()->word;
-        $options = array(
+        $options = [
             $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
             $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
             $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
-        );
+        ];
         $prefix = $this->getFaker()->unique()->word;
         $addCircularGuard = $this->getFaker()->boolean();
-        $this->extension->load(array(array(
-            'keys' => array(
-                'sources' => array(
-                    array(
-                        'type' => $type,
-                        'options' => $options,
-                        'prefix' => $prefix,
-                        'add_circular_guard' => $addCircularGuard
-                    )
-                ),
-            )
-        )), $container);
-        $definition = new DefinitionDecorator('giftcards.encryption.abstract_key_source');
+        $this->extension->load([
+            [
+                'keys' => [
+                    'sources' => [
+                        [
+                            'type' => $type,
+                            'options' => $options,
+                            'prefix' => $prefix,
+                            'add_circular_guard' => $addCircularGuard
+                        ]
+                    ],
+                ]
+            ]
+        ], $container);
+        $definition = new ChildDefinition('giftcards.encryption.abstract_key_source');
         $definition
             ->replaceArgument(0, $type)
             ->replaceArgument(1, $options)
-            ->addTag('giftcards.encryption.key_source', array(
+            ->addTag('giftcards.encryption.key_source', [
                 'prefix' => $prefix,
                 'add_circular_guard' => $addCircularGuard
-            ))
+            ])
         ;
         $this->assertEquals($definition, $container->getDefinition('giftcards.encryption.key_source.0'));
     }
@@ -283,28 +274,29 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
     {
         $container = new ContainerBuilder();
         $type = $this->getFaker()->unique()->word;
-        $options = array(
+        $options = [
             $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
             $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
             $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
-        );
-        $prefix = $this->getFaker()->unique()->word;
+        ];
         $name = $this->getFaker()->unique()->word;
-        $this->extension->load(array(array(
-            'cipher_texts' => array(
-                'rotators' => array(
-                    $name => array(
-                        'type' => $type,
-                        'options' => $options,
-                    )
-                ),
-            )
-        )), $container);
-        $definition = new DefinitionDecorator('giftcards.encryption.abstract_cipher_text_rotator');
+        $this->extension->load([
+            [
+                'cipher_texts' => [
+                    'rotators' => [
+                        $name => [
+                            'type' => $type,
+                            'options' => $options,
+                        ]
+                    ],
+                ]
+            ]
+        ], $container);
+        $definition = new ChildDefinition('giftcards.encryption.abstract_cipher_text_rotator');
         $definition
             ->replaceArgument(0, $type)
             ->replaceArgument(1, $options)
-            ->addTag('giftcards.encryption.cipher_text_rotator', array('alias' => $name))
+            ->addTag('giftcards.encryption.cipher_text_rotator', ['alias' => $name])
         ;
         $this->assertEquals($definition, $container->getDefinition('giftcards.encryption.cipher_text_rotator.'.$name));
     }
@@ -313,28 +305,30 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
     {
         $container = new ContainerBuilder();
         $type = $this->getFaker()->unique()->word;
-        $options = array(
+        $options = [
             $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
             $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
             $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
-        );
+        ];
         $priority = $this->getFaker()->randomNumber();
-        $this->extension->load(array(array(
-            'cipher_texts' => array(
-                'serializers' => array(
-                    array(
-                        'type' => $type,
-                        'options' => $options,
-                        'priority' => $priority
-                    )
-                ),
-            )
-        )), $container);
-        $definition = new DefinitionDecorator('giftcards.encryption.abstract_cipher_text_serializer');
+        $this->extension->load([
+            [
+                'cipher_texts' => [
+                    'serializers' => [
+                        [
+                            'type' => $type,
+                            'options' => $options,
+                            'priority' => $priority
+                        ]
+                    ],
+                ]
+            ]
+        ], $container);
+        $definition = new ChildDefinition('giftcards.encryption.abstract_cipher_text_serializer');
         $definition
             ->replaceArgument(0, $type)
             ->replaceArgument(1, $options)
-            ->addTag('giftcards.encryption.cipher_text_serializer', array('priority' => $priority))
+            ->addTag('giftcards.encryption.cipher_text_serializer', ['priority' => $priority])
         ;
         $this->assertEquals($definition, $container->getDefinition('giftcards.encryption.cipher_text_serializer.0'));
     }
@@ -343,28 +337,30 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
     {
         $container = new ContainerBuilder();
         $type = $this->getFaker()->unique()->word;
-        $options = array(
+        $options = [
             $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
             $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
             $this->getFaker()->unique()->word => $this->getFaker()->unique()->word,
-        );
+        ];
         $priority = $this->getFaker()->randomNumber();
-        $this->extension->load(array(array(
-            'cipher_texts' => array(
-                'deserializers' => array(
-                    array(
+        $this->extension->load([
+            [
+            'cipher_texts' => [
+                'deserializers' => [
+                    [
                         'type' => $type,
                         'options' => $options,
                         'priority' => $priority
-                    )
-                ),
-            )
-        )), $container);
-        $definition = new DefinitionDecorator('giftcards.encryption.abstract_cipher_text_deserializer');
+                    ]
+                ],
+            ]
+            ]
+        ], $container);
+        $definition = new ChildDefinition('giftcards.encryption.abstract_cipher_text_deserializer');
         $definition
             ->replaceArgument(0, $type)
             ->replaceArgument(1, $options)
-            ->addTag('giftcards.encryption.cipher_text_deserializer', array('priority' => $priority))
+            ->addTag('giftcards.encryption.cipher_text_deserializer', ['priority' => $priority])
         ;
         $this->assertEquals($definition, $container->getDefinition('giftcards.encryption.cipher_text_deserializer.0'));
     }
@@ -372,19 +368,18 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
     public function testLoadWhereEncryptedFieldsDisabled()
     {
         $container = new ContainerBuilder();
-        $this->extension->load(array(array(
-            'doctrine' => array(
-                'encrypted_properties' => array(
-                    'enabled' => false
-                )
-            )
-        )), $container);
-        $this->assertNotContains(
+        $this->extension->load([
+            [
+                'doctrine' => [
+                    'encrypted_properties' => [
+                        'enabled' => false
+                    ]
+                ]
+            ]
+        ], $container);
+        $this->assertNotContainsEquals(
             new FileResource(__DIR__.'/../../Resources/config/doctrine_encrypted_properties.yml'),
-            $container->getResources(),
-            '',
-            false,
-            false
+            $container->getResources()
         );
     }
 
@@ -394,26 +389,28 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
         $connection1 = $this->getFaker()->unique()->word;
         $connection2 = $this->getFaker()->unique()->word;
         $connection3 = $this->getFaker()->unique()->word;
-        $this->extension->load(array(array(
-            'doctrine' => array(
-                'encrypted_properties' => array(
-                    'connections' => array(
-                        $connection1,
-                        $connection2,
-                        $connection3,
-                    )
-                )
-            )
-        )), $container);
-        $this->assertEquals(array(
-            array('connection' => $connection1),
-        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection1)->getTag('doctrine.event_subscriber'));
-        $this->assertEquals(array(
-            array('connection' => $connection2),
-        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection2)->getTag('doctrine.event_subscriber'));
-        $this->assertEquals(array(
-            array('connection' => $connection3),
-        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection3)->getTag('doctrine.event_subscriber'));
+        $this->extension->load([
+            [
+                'doctrine' => [
+                    'encrypted_properties' => [
+                        'connections' => [
+                            $connection1,
+                            $connection2,
+                            $connection3,
+                        ]
+                    ]
+                ]
+            ]
+        ], $container);
+        $this->assertEquals([
+            ['connection' => $connection1],
+        ], $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection1)->getTag('doctrine.event_subscriber'));
+        $this->assertEquals([
+            ['connection' => $connection2],
+        ], $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection2)->getTag('doctrine.event_subscriber'));
+        $this->assertEquals([
+            ['connection' => $connection3],
+        ], $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection3)->getTag('doctrine.event_subscriber'));
     }
 
     public function testLoadWhereEncryptedFieldsHasConnectionsConfiguredForOrmAndOdm()
@@ -424,43 +421,45 @@ class GiftcardsEncryptionExtensionTest extends AbstractTestCase
         $connection3 = $this->getFaker()->unique()->word;
         $connection4 = $this->getFaker()->unique()->word;
         $connection5 = $this->getFaker()->unique()->word;
-        $this->extension->load(array(array(
-            'doctrine' => array(
-                'encrypted_properties' => array(
-                    'orm' => array(
-                        'connections' => array(
-                            $connection1,
-                            $connection2,
-                            $connection3,
-                        )
-                    ),
-                    'odm' => array(
-                        'connections' => array(
-                            $connection1,
-                            $connection4,
-                            $connection5,
-                        )
-                    ),
-                )
-            )
-        )), $container);
-        $this->assertEquals(array(
-            array('connection' => $connection1),
-        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection1)->getTag('doctrine.event_subscriber'));
-        $this->assertEquals(array(
-            array('connection' => $connection2),
-        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection2)->getTag('doctrine.event_subscriber'));
-        $this->assertEquals(array(
-            array('connection' => $connection3),
-        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection3)->getTag('doctrine.event_subscriber'));
-        $this->assertEquals(array(
-            array('connection' => $connection1),
-        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.odm.'.$connection1)->getTag('doctrine_mongodb.odm.event_subscriber'));
-        $this->assertEquals(array(
-            array('connection' => $connection4),
-        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.odm.'.$connection4)->getTag('doctrine_mongodb.odm.event_subscriber'));
-        $this->assertEquals(array(
-            array('connection' => $connection5),
-        ), $container->getDefinition('giftcards.encryption.listener.encrypted_listener.odm.'.$connection5)->getTag('doctrine_mongodb.odm.event_subscriber'));
+        $this->extension->load([
+            [
+                'doctrine' => [
+                    'encrypted_properties' => [
+                        'orm' => [
+                            'connections' => [
+                                $connection1,
+                                $connection2,
+                                $connection3,
+                            ]
+                        ],
+                        'odm' => [
+                            'connections' => [
+                                $connection1,
+                                $connection4,
+                                $connection5,
+                            ]
+                        ],
+                    ]
+                ]
+            ]
+        ], $container);
+        $this->assertEquals([
+            ['connection' => $connection1],
+        ], $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection1)->getTag('doctrine.event_subscriber'));
+        $this->assertEquals([
+            ['connection' => $connection2],
+        ], $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection2)->getTag('doctrine.event_subscriber'));
+        $this->assertEquals([
+            ['connection' => $connection3],
+        ], $container->getDefinition('giftcards.encryption.listener.encrypted_listener.orm.'.$connection3)->getTag('doctrine.event_subscriber'));
+        $this->assertEquals([
+            ['connection' => $connection1],
+        ], $container->getDefinition('giftcards.encryption.listener.encrypted_listener.odm.'.$connection1)->getTag('doctrine_mongodb.odm.event_subscriber'));
+        $this->assertEquals([
+            ['connection' => $connection4],
+        ], $container->getDefinition('giftcards.encryption.listener.encrypted_listener.odm.'.$connection4)->getTag('doctrine_mongodb.odm.event_subscriber'));
+        $this->assertEquals([
+            ['connection' => $connection5],
+        ], $container->getDefinition('giftcards.encryption.listener.encrypted_listener.odm.'.$connection5)->getTag('doctrine_mongodb.odm.event_subscriber'));
     }
 }
