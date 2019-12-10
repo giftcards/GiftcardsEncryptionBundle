@@ -9,23 +9,23 @@
 namespace Giftcards\EncryptionBundle\Tests\DependencyInjection\Compiler;
 
 use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCiphersPass;
-use Giftcards\Encryption\Tests\AbstractTestCase;
+use Omni\TestingBundle\TestCase\Extension\AbstractExtendableTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
 
-class AddCiphersPassTest extends AbstractTestCase
+class AddCiphersPassTest extends AbstractExtendableTestCase
 {
     /** @var  AddCiphersPass */
     protected $pass;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->pass = new AddCiphersPass();
     }
 
     public function testProcessWithNoRegistry()
     {
+        $this->expectNoException();
         $this->pass->process(new ContainerBuilder());
     }
 
@@ -36,68 +36,55 @@ class AddCiphersPassTest extends AbstractTestCase
         $container->setDefinition('not_cipher', new Definition());
         $container->setDefinition('cipher1', new Definition())->addTag(
             'giftcards.encryption.cipher',
-            array('alias' => 'cipher1')
+            ['alias' => 'cipher1']
         );
         $container->setDefinition('cipher2', new Definition())
             ->addTag(
                 'giftcards.encryption.cipher',
-                array('alias' => 'cipher2')
+                ['alias' => 'cipher2']
             )
         ;
         $container->setDefinition('cipher3', new Definition())->addTag(
             'giftcards.encryption.cipher',
-            array('alias' => 'cipher3')
+            ['alias' => 'cipher3']
         );
         $this->pass->process($container);
-        $this->assertContains(
-            array('setServiceId', array('cipher1', 'cipher1')),
-            $container->getDefinition('giftcards.encryption.cipher.registry')->getMethodCalls(),
-            '',
-            false,
-            false
+        $this->assertContainsEquals(
+            ['setServiceId', ['cipher1', 'cipher1']],
+            $container->getDefinition('giftcards.encryption.cipher.registry')->getMethodCalls()
         );
-        $this->assertContains(
-            array('setServiceId', array('cipher2', 'cipher2')),
-            $container->getDefinition('giftcards.encryption.cipher.registry')->getMethodCalls(),
-            '',
-            false,
-            false
+        $this->assertContainsEquals(
+            ['setServiceId', ['cipher2', 'cipher2']],
+            $container->getDefinition('giftcards.encryption.cipher.registry')->getMethodCalls()
         );
-        $this->assertContains(
-            array('setServiceId', array('cipher3', 'cipher3')),
-            $container->getDefinition('giftcards.encryption.cipher.registry')->getMethodCalls(),
-            '',
-            false,
-            false
+        $this->assertContainsEquals(
+            ['setServiceId', ['cipher3', 'cipher3']],
+            $container->getDefinition('giftcards.encryption.cipher.registry')->getMethodCalls()
         );
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testProcessWithRegistryAndAServiceWIthADoubleTag()
     {
+        $this->expectException('\InvalidArgumentException');
         $container = new ContainerBuilder();
         $container->setDefinition('giftcards.encryption.cipher.registry', new Definition());
         $container->setDefinition('not_cipher', new Definition());
         $container->setDefinition('cipher1', new Definition())
             ->addTag(
                 'giftcards.encryption.cipher',
-                array('alias' => 'cipher1')
+                ['alias' => 'cipher1']
             )
             ->addTag(
                 'giftcards.encryption.cipher',
-                array('alias' => 'cipher2')
+                ['alias' => 'cipher2']
             )
         ;
         $this->pass->process($container);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testProcessWithRegistryAndMissingAlias()
     {
+        $this->expectException('\InvalidArgumentException');
         $container = new ContainerBuilder();
         $container->setDefinition('giftcards.encryption.cipher.registry', new Definition());
         $container->setDefinition('not_rotator', new Definition());

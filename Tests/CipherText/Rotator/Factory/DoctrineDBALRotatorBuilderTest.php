@@ -8,10 +8,10 @@
 
 namespace Giftcards\EncryptionBundle\Tests\CipherText\Rotator\Factory;
 
-use Doctrine\DBAL\Connection;
 use Giftcards\Encryption\Tests\CipherText\Rotator\Factory\DoctrineDBALRotatorBuilderTest as BaseDoctrineDBALRotatorBuilderTest;
 use Giftcards\Encryption\Tests\Mock\Mockery\Matcher\EqualsMatcher;
 use Giftcards\EncryptionBundle\CipherText\Rotator\Factory\DoctrineDBALRotatorBuilder;
+use Mockery;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,7 +24,7 @@ class DoctrineDBALRotatorBuilderTest extends BaseDoctrineDBALRotatorBuilderTest
     /** @var  ContainerInterface */
     protected $container;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->builder = new DoctrineDBALRotatorBuilder(
             $this->container = new Container()
@@ -34,55 +34,55 @@ class DoctrineDBALRotatorBuilderTest extends BaseDoctrineDBALRotatorBuilderTest
     public function testConfigureOptionsResolver()
     {
         $this->builder->configureOptionsResolver(
-            \Mockery::mock('Symfony\Component\OptionsResolver\OptionsResolver')
+            Mockery::mock('Symfony\Component\OptionsResolver\OptionsResolver')
                 ->shouldReceive('setRequired')
                 ->once()
-                ->with(array(
+                ->with([
                     'connection',
                     'table',
                     'fields',
                     'id_field'
-                ))
-                ->andReturn(\Mockery::self())
+                ])
+                ->andReturnSelf()
                 ->getMock()
                 ->shouldReceive('setAllowedTypes')
                 ->once()
                 ->with('connection', 'Doctrine\DBAL\Connection')
-                ->andReturn(\Mockery::self())
+                ->andReturnSelf()
                 ->getMock()
                 ->shouldReceive('setAllowedTypes')
                 ->once()
                 ->with('table', 'string')
-                ->andReturn(\Mockery::self())
+                ->andReturnSelf()
                 ->getMock()
                 ->shouldReceive('setAllowedTypes')
                 ->once()
                 ->with('fields', 'array')
-                ->andReturn(\Mockery::self())
+                ->andReturnSelf()
                 ->getMock()
                 ->shouldReceive('setAllowedTypes')
                 ->once()
                 ->with('id_field', 'string')
-                ->andReturn(\Mockery::self())
+                ->andReturnSelf()
                 ->getMock()
                 ->shouldReceive('addAllowedTypes')
                 ->once()
                 ->with('connection', 'string')
-                ->andReturn(\Mockery::self())
+                ->andReturnSelf()
                 ->getMock()
                 ->shouldReceive('setNormalizer')
                 ->once()
                 ->with('connection', new EqualsMatcher(function () {}))
-                ->andReturn(\Mockery::self())
+                ->andReturnSelf()
                 ->getMock()
         );
-        $connection = \Mockery::mock('Doctrine\DBAL\Connection');
+        $connection = Mockery::mock('Doctrine\DBAL\Connection');
         $resolver = new OptionsResolver();
         $this->builder->configureOptionsResolver($resolver);
-        $options = $resolver->resolve(array('connection' => $connection, 'table' => '', 'fields' => array(), 'id_field' => ''));
+        $options = $resolver->resolve(['connection' => $connection, 'table' => '', 'fields' => [], 'id_field' => '']);
         $this->assertSame($connection, $options['connection']);
         $this->container->set('connection', $connection);
-        $options = $resolver->resolve(array('connection' => 'connection', 'table' => '', 'fields' => array(), 'id_field' => ''));
+        $options = $resolver->resolve(['connection' => 'connection', 'table' => '', 'fields' => [], 'id_field' => '']);
         $this->assertSame($connection, $options['connection']);
     }
 }

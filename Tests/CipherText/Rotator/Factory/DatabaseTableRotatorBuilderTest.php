@@ -12,6 +12,7 @@ use Giftcards\Encryption\Tests\CipherText\Rotator\Factory\DatabaseTableRotatorBu
 use Giftcards\Encryption\Tests\Mock\Mockery\Matcher\EqualsMatcher;
 use Giftcards\Encryption\Tests\MockPDO;
 use Giftcards\EncryptionBundle\CipherText\Rotator\Factory\DatabaseTableRotatorBuilder;
+use Mockery;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,7 +25,7 @@ class DatabaseTableRotatorBuilderTest extends BaseDatabaseTableRotatorBuilderTes
     /** @var  ContainerInterface */
     protected $container;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->builder = new DatabaseTableRotatorBuilder(
             $this->container = new Container()
@@ -34,55 +35,55 @@ class DatabaseTableRotatorBuilderTest extends BaseDatabaseTableRotatorBuilderTes
     public function testConfigureOptionsResolver()
     {
         $this->builder->configureOptionsResolver(
-            \Mockery::mock('Symfony\Component\OptionsResolver\OptionsResolver')
+            Mockery::mock('Symfony\Component\OptionsResolver\OptionsResolver')
                 ->shouldReceive('setRequired')
                 ->once()
-                ->with(array(
+                ->with([
                     'pdo',
                     'table',
                     'fields',
                     'id_field'
-                ))
-                ->andReturn(\Mockery::self())
+                ])
+                ->andReturnSelf()
                 ->getMock()
                 ->shouldReceive('setAllowedTypes')
                 ->once()
                 ->with('pdo', 'PDO')
-                ->andReturn(\Mockery::self())
+                ->andReturnSelf()
                 ->getMock()
                 ->shouldReceive('setAllowedTypes')
                 ->once()
                 ->with('table', 'string')
-                ->andReturn(\Mockery::self())
+                ->andReturnSelf()
                 ->getMock()
                 ->shouldReceive('setAllowedTypes')
                 ->once()
                 ->with('fields', 'array')
-                ->andReturn(\Mockery::self())
+                ->andReturnSelf()
                 ->getMock()
                 ->shouldReceive('setAllowedTypes')
                 ->once()
                 ->with('id_field', 'string')
-                ->andReturn(\Mockery::self())
+                ->andReturnSelf()
                 ->getMock()
                 ->shouldReceive('addAllowedTypes')
                 ->once()
                 ->with('pdo', 'string')
-                ->andReturn(\Mockery::self())
+                ->andReturnSelf()
                 ->getMock()
                 ->shouldReceive('setNormalizer')
                 ->once()
                 ->with('pdo', new EqualsMatcher(function () {}))
-                ->andReturn(\Mockery::self())
+                ->andReturnSelf()
                 ->getMock()
         );
-        $pdo = new MockPDO(\Mockery::mock());
+        $pdo = new MockPDO(Mockery::mock());
         $resolver = new OptionsResolver();
         $this->builder->configureOptionsResolver($resolver);
-        $options = $resolver->resolve(array('pdo' => $pdo, 'table' => '', 'fields' => array(), 'id_field' => ''));
+        $options = $resolver->resolve(['pdo' => $pdo, 'table' => '', 'fields' => [], 'id_field' => '']);
         $this->assertSame($pdo, $options['pdo']);
         $this->container->set('pdo', $pdo);
-        $options = $resolver->resolve(array('pdo' => 'pdo', 'table' => '', 'fields' => array(), 'id_field' => ''));
+        $options = $resolver->resolve(['pdo' => 'pdo', 'table' => '', 'fields' => [], 'id_field' => '']);
         $this->assertSame($pdo, $options['pdo']);
     }
 }

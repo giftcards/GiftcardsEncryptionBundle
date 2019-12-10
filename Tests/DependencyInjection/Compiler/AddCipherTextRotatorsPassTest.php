@@ -9,23 +9,23 @@
 namespace Giftcards\EncryptionBundle\Tests\DependencyInjection\Compiler;
 
 use Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextRotatorsPass;
-use Giftcards\Encryption\Tests\AbstractTestCase;
+use Omni\TestingBundle\TestCase\Extension\AbstractExtendableTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
 
-class AddCipherTextRotatorsPassTest extends AbstractTestCase
+class AddCipherTextRotatorsPassTest extends AbstractExtendableTestCase
 {
     /** @var  AddCipherTextRotatorsPass */
     protected $pass;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->pass = new AddCipherTextRotatorsPass();
     }
 
     public function testProcessWithNoRegistry()
     {
+        $this->expectNoException();
         $this->pass->process(new ContainerBuilder());
     }
 
@@ -36,58 +36,44 @@ class AddCipherTextRotatorsPassTest extends AbstractTestCase
         $container->setDefinition('not_rotator', new Definition());
         $container->setDefinition('rotator1', new Definition())->addTag(
             'giftcards.encryption.cipher_text_rotator',
-            array('alias' => 'rotator1')
+            ['alias' => 'rotator1']
         );
         $container->setDefinition('rotator23', new Definition())
             ->addTag(
                 'giftcards.encryption.cipher_text_rotator',
-                array('alias' => 'rotator2')
+                ['alias' => 'rotator2']
             )
             ->addTag(
                 'giftcards.encryption.cipher_text_rotator',
-                array('alias' => 'rotator3')
+                ['alias' => 'rotator3']
             )
         ;
         $container->setDefinition('rotator4', new Definition())->addTag(
             'giftcards.encryption.cipher_text_rotator',
-            array('alias' => 'rotator4')
+            ['alias' => 'rotator4']
         );
         $this->pass->process($container);
-        $this->assertContains(
-            array('setServiceId', array('rotator1', 'rotator1')),
-            $container->getDefinition('giftcards.encryption.cipher_text_rotator.registry')->getMethodCalls(),
-            '',
-            false,
-            false
+        $this->assertContainsEquals(
+            ['setServiceId', ['rotator1', 'rotator1']],
+            $container->getDefinition('giftcards.encryption.cipher_text_rotator.registry')->getMethodCalls()
         );
-        $this->assertContains(
-            array('setServiceId', array('rotator2', 'rotator23')),
-            $container->getDefinition('giftcards.encryption.cipher_text_rotator.registry')->getMethodCalls(),
-            '',
-            false,
-            false
+        $this->assertContainsEquals(
+            ['setServiceId', ['rotator2', 'rotator23']],
+            $container->getDefinition('giftcards.encryption.cipher_text_rotator.registry')->getMethodCalls()
         );
-        $this->assertContains(
-            array('setServiceId', array('rotator3', 'rotator23')),
-            $container->getDefinition('giftcards.encryption.cipher_text_rotator.registry')->getMethodCalls(),
-            '',
-            false,
-            false
+        $this->assertContainsEquals(
+            ['setServiceId', ['rotator3', 'rotator23']],
+            $container->getDefinition('giftcards.encryption.cipher_text_rotator.registry')->getMethodCalls()
         );
-        $this->assertContains(
-            array('setServiceId', array('rotator4', 'rotator4')),
-            $container->getDefinition('giftcards.encryption.cipher_text_rotator.registry')->getMethodCalls(),
-            '',
-            false,
-            false
+        $this->assertContainsEquals(
+            ['setServiceId', ['rotator4', 'rotator4']],
+            $container->getDefinition('giftcards.encryption.cipher_text_rotator.registry')->getMethodCalls()
         );
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testProcessWithRegistryAndMissingAlias()
     {
+        $this->expectException('\InvalidArgumentException');
         $container = new ContainerBuilder();
         $container->setDefinition('giftcards.encryption.cipher_text_rotator.registry', new Definition());
         $container->setDefinition('not_rotator', new Definition());

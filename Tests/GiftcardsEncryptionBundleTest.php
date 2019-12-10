@@ -8,15 +8,17 @@
 
 namespace Giftcards\EncryptionBundle\Tests;
 
-use Giftcards\Encryption\Tests\AbstractTestCase;
-use Giftcards\EncryptionBundle\GiftcardsEncryptionBundle;
 
-class GiftcardsEncryptionBundleTest extends AbstractTestCase
+use Giftcards\EncryptionBundle\GiftcardsEncryptionBundle;
+use Mockery;
+use Omni\TestingBundle\TestCase\Extension\AbstractExtendableTestCase;
+
+class GiftcardsEncryptionBundleTest extends AbstractExtendableTestCase
 {
     /** @var  GiftcardsEncryptionBundle */
     protected $bundle;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->bundle = new GiftcardsEncryptionBundle();
     }
@@ -24,31 +26,31 @@ class GiftcardsEncryptionBundleTest extends AbstractTestCase
     public function testCompile()
     {
         $this->bundle->build(
-            \Mockery::mock('Symfony\Component\DependencyInjection\ContainerBuilder')
+            Mockery::mock('Symfony\Component\DependencyInjection\ContainerBuilder')
                 ->shouldReceive('addCompilerPass')
                 ->once()
                 ->with('Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextRotatorsPass')
-                ->andReturn(\Mockery::self())
+                ->andReturnSelf()
                 ->getMock()
                 ->shouldReceive('addCompilerPass')
                 ->once()
                 ->with('Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCiphersPass')
-                ->andReturn(\Mockery::self())
+                ->andReturnSelf()
                 ->getMock()
                 ->shouldReceive('addCompilerPass')
                 ->once()
                 ->with('Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddCipherTextSerializersDeserializersPass')
-                ->andReturn(\Mockery::self())
+                ->andReturnSelf()
                 ->getMock()
                 ->shouldReceive('addCompilerPass')
                 ->once()
                 ->with('Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddKeySourcesPass')
-                ->andReturn(\Mockery::self())
+                ->andReturnSelf()
                 ->getMock()
                 ->shouldReceive('addCompilerPass')
                 ->once()
                 ->with('Giftcards\EncryptionBundle\DependencyInjection\Compiler\AddBuildersPass')
-                ->andReturn(\Mockery::self())
+                ->andReturnSelf()
                 ->getMock()
         );
     }
